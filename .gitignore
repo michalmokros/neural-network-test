@@ -1,0 +1,6 @@
+fashion_mnist_test_labels.csv
+fashion_mnist_test_vectors.csv
+fashion_mnist_train_labels.csv
+fashion_mnist_train_vectors.csv
+.vscode
+*.exe
