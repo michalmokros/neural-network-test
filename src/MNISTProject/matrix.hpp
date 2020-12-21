@@ -85,17 +85,17 @@ public:
         return *this;
     }
 
-    matrix operator*=(const matrix& secondMatrix) {
+    matrix operator*=(const matrix& secondMatrix) const {
         std::pair<short, short> sMSize = secondMatrix.size();
-        if (colsize_ != sMSize.first) {
-            this->no_corr_result();
+        if (colsize_ != sMSize.second) {
+            throw std::runtime_error("No sane or correct value to return");
         }
 
-        matrix resultingMatrix = matrix(rowsize_, sMSize.second);
+        matrix resultingMatrix = matrix(rowsize_, sMSize.first);
         for (int i = 0; i < rowsize_; i++) {
-            for (int j = 0; j < sMSize.second; j++) {
-                for (int k = 0; k < sMSize.first; k++) {
-                    resultingMatrix[{i, j}] += (*this)[{i, k}] * secondMatrix[{k, j}];
+            for (int j = 0; j < sMSize.first; j++) {
+                for (int k = 0; k < sMSize.second; k++) {
+                    resultingMatrix[{j, i}] += ((*this)[{k, i}] * secondMatrix[{j, k}]);
                 }
             }
         }
@@ -127,22 +127,23 @@ inline matrix& operator*(int multiplier, matrix firstMatrix) {
 }
 
 inline matrix operator*(matrix firstMatrix, matrix secondMatrix) {
-    std::pair<short, short> fMSize = firstMatrix.size();
-    std::pair<short, short> sMSize = secondMatrix.size();
-    if (fMSize.second != sMSize.first) {
-	    throw std::runtime_error("No sane or correct value to return");
-    }
+    return firstMatrix *= secondMatrix;
+    // std::pair<short, short> fMSize = firstMatrix.size();
+    // std::pair<short, short> sMSize = secondMatrix.size();
+    // if (fMSize.first != sMSize.second) {
+	//     throw std::runtime_error("No sane or correct value to return");
+    // }
 
-    matrix resultingMatrix = matrix(fMSize.first, sMSize.second);
-    for (int i = 0; i < fMSize.first; i++) {
-        for (int j = 0; j < sMSize.second; j++) {
-            for (int k = 0; k < sMSize.first; k++) {
-                resultingMatrix[{i, j}] = resultingMatrix[{i, j}] + (firstMatrix[{i, k}] * secondMatrix[{k, j}]);
-            }
-        }
-    }
+    // matrix resultingMatrix = matrix(fMSize.second, sMSize.first);
+    // for (int i = 0; i < fMSize.second; i++) {
+    //     for (int j = 0; j < sMSize.first; j++) {
+    //         for (int k = 0; k < sMSize.second; k++) {
+    //             resultingMatrix[{j, i}] = resultingMatrix[{j, i}] + (firstMatrix[{k, i}] * secondMatrix[{j, k}]);
+    //         }
+    //     }
+    // }
 
-    return resultingMatrix;
+    // return resultingMatrix;
 }
 
 #endif

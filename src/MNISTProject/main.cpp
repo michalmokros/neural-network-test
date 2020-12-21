@@ -41,12 +41,12 @@ int main() {
 	cout << "mtOne == mtOne: " << (mtOne == mtOne) << endl;
 	cout << "mtOne != mtTwo: " << (mtOne != mtTwo) << endl;
 
-	const matrix mtThree({ 3, 1, 4 }, 3);
+	const matrix mtThree({ 3, 1, 4 }, 1);
 
     const matrix mtFour({ 4, 3,
 	                 2, 5,
 	                 6, 8 },
-	    2);
+	    3);
 	cout << "************* matrix multiplication **************\n";
 	cout << "mtThree * mtFour: " << (mtThree * mtFour) << endl;
 
