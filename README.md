@@ -111,3 +111,11 @@ PV021 Neural networks
 - [1] http://yann.lecun.com/exdb/mnist/
 - [2] Ronald Luc, 235313
 - [3] https://www.fi.muni.cz/tech/unix/modules.html.en
+
+
+APPLICATION STRUCTURE 
+src/ (source for the application)
+lib/ (source for the application library *.cpp *.hpp)
+include/ (interface for the library *.h)
+tests/ (main.cpp for quick tests) <- use cppunit for this part
+doc/ (doxygen or any kind of documentation)

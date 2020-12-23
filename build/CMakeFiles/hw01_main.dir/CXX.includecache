@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/michalmokros/Documents/Muni/pv021/pv021-neural-network/src/main.cpp
+matrix.cpp
+/Users/michalmokros/Documents/Muni/pv021/pv021-neural-network/src/matrix.cpp
+iostream
+-
+
+/Users/michalmokros/Documents/Muni/pv021/pv021-neural-network/src/matrix.cpp
+matrix.hpp
+/Users/michalmokros/Documents/Muni/pv021/pv021-neural-network/src/matrix.hpp
+algorithm
+-
+iterator
+-
+stdexcept
+-
+vector
+-
+
+/Users/michalmokros/Documents/Muni/pv021/pv021-neural-network/src/matrix.hpp
+iostream
+-
+utility
+-
+vector
+-
+stdexcept
+-
+
