@@ -10,9 +10,9 @@ class Layer {
     public:
         Layer(vector<Neuron> neurons);
         void feedForward(Layer &previousLayer);
-        size_t neuronsSize();
+        size_t layerSize();
         void setNeuronOutputValue(nntopology_t index, nnweight_t outputValue);
-
+        Neuron& getNeuronAt(size_t i);
     private:
         vector<Neuron> neurons_;
 };

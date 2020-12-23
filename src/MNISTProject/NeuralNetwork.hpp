@@ -16,6 +16,10 @@ public:
 private:
     vector<Layer> layers_;
     nntopology_t layersSize_;
+
+    nnweight_t overallNetError_;
+    nnweight_t recentAverageError_;
+    nnweight_t recentAverageFactor_;
 };
 
 #endif

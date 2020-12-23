@@ -21,8 +21,8 @@ NeuralNetwork::NeuralNetwork(const vector<nntopology_t> &topology) {
 }
 
 void NeuralNetwork::feedForward(const vector<nnweight_t> &inputVals) {
-    if (inputVals.size() != layers_[0].neuronsSize() - 1) {
-        string message = "Invalid input size: Expected=" + to_string(layers_[0].neuronsSize() - 1) + " and Got=" + to_string(inputVals.size());
+    if (inputVals.size() != layers_[0].layerSize() - 1) {
+        string message = "Invalid input size: Expected=" + to_string(layers_[0].layerSize() - 1) + " and Got=" + to_string(inputVals.size());
         throw runtime_error(message);
     }
 
@@ -33,5 +33,42 @@ void NeuralNetwork::feedForward(const vector<nnweight_t> &inputVals) {
     for (nntopology_t i = 1; i < layersSize_; i++) {
         Layer &previousLayer = layers_[i - 1];
         layers_[i].feedForward(previousLayer);
+    }
+}
+
+void NeuralNetwork::backProp(const vector<nnweight_t> &targetVals) {
+    Layer &outputLayer = layers_.back();
+    overallNetError_ = 0.0;
+
+    for (size_t i = 0; i < outputLayer.layerSize(); i++) {
+        nnweight_t delta = targetVals[i] - outputLayer.getNeuronAt(i).getOutputValue();
+        overallNetError_ += delta * delta;
+    } 
+
+    overallNetError_ /= outputLayer.layerSize() - 1;
+    overallNetError_ = sqrt(overallNetError_);
+
+    recentAverageError_ = (recentAverageError_ * recentAverageFactor_ + overallNetError_) / (recentAverageFactor_ + 1.0); 
+
+    for (size_t i = 0; i < outputLayer.layerSize() - 1; i++) {
+        outputLayer.getNeuronAt(i).calculateOutputGradients(targetVals[i]);
+    }
+
+    for (size_t i = layers_.size() - 2; i > 0; i--) {
+        Layer &hiddenLayer = layers_[i];
+        Layer &nextLayer = layers_[i + 1];
+
+        for (size_t j = 0; j < hiddenLayer.layerSize(); j++) {
+            hiddenLayer.getNeuronAt(j).calculateHiddenGradients(nextLayer);
+        }
+    }
+
+    for (size_t i = layers_.size() - 1; i > 0; i--) {
+        Layer &currentLayer = layers_[i];
+        Layer &previousLayer = layers_[i - 1];
+
+        for (size_t j = 0; j < currentLayer.layerSize(); j++) {
+            currentLayer.getNeuronAt(j).updateInputWeights(previousLayer);
+        }
     }
 }

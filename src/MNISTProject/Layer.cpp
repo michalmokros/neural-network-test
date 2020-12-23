@@ -10,10 +10,12 @@ void Layer::feedForward(Layer &previousLayer) {
         for (size_t j = 0; j < previousLayer.neurons_.size(); j++) {
             sum += previousLayer.neurons_[j].getOutputValue() * previousLayer.neurons_[j].getWeightOnConnection(neurons_[i]);
         }
+
+        neurons_[i].setOutputValue(Neuron::applicationFunction(sum));
     }
 }
 
-size_t Layer::neuronsSize() {
+size_t Layer::layerSize() {
     return neurons_.size();
 }
 
@@ -21,3 +23,6 @@ void Layer::setNeuronOutputValue(nntopology_t index, nnweight_t outputValue) {
     neurons_[index].setOutputValue(outputValue);
 }
 
+Neuron& Layer::getNeuronAt(size_t i) {
+    return neurons_[i];
+}
