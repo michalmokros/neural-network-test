@@ -1,10 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
-project(vyuka)
+project(neural-network)
 
-if (CMAKE_CXX_COMPILER_ID MATCHES Clang OR ${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
-  # using regular Clang or AppleClang or GCC
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -Wextra -pedantic -Wold-style-cast")
-endif()
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -Wextra -pedantic -Wold-style-cast")
 
 file( GLOB APP_SOURCES *.cpp )
 foreach( source_file ${APP_SOURCES} )
