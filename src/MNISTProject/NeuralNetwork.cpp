@@ -1,9 +1,12 @@
 #include <iostream>
 #include <string>
+#include <cmath>
 #include "NeuralNetwork.hpp"
 #include "Neuron.hpp"
 
 using namespace std;
+
+nnweight_t NeuralNetwork::recentAverageFactor_ = 100.0;
 
 NeuralNetwork::NeuralNetwork(const vector<nntopology_t> &topology) {
     layersSize_ = topology.size();
@@ -50,25 +53,26 @@ void NeuralNetwork::backProp(const vector<nnweight_t> &targetVals) {
 
     recentAverageError_ = (recentAverageError_ * recentAverageFactor_ + overallNetError_) / (recentAverageFactor_ + 1.0); 
 
-    for (size_t i = 0; i < outputLayer.layerSize() - 1; i++) {
-        outputLayer.getNeuronAt(i).calculateOutputGradients(targetVals[i]);
-    }
+    outputLayer.calculateNeuronOutputGradients(targetVals);
 
     for (size_t i = layers_.size() - 2; i > 0; i--) {
         Layer &hiddenLayer = layers_[i];
         Layer &nextLayer = layers_[i + 1];
-
-        for (size_t j = 0; j < hiddenLayer.layerSize(); j++) {
-            hiddenLayer.getNeuronAt(j).calculateHiddenGradients(nextLayer);
-        }
+        hiddenLayer.calculateHiddenNeuronsGradients(nextLayer);
     }
 
     for (size_t i = layers_.size() - 1; i > 0; i--) {
         Layer &currentLayer = layers_[i];
         Layer &previousLayer = layers_[i - 1];
 
-        for (size_t j = 0; j < currentLayer.layerSize(); j++) {
-            currentLayer.getNeuronAt(j).updateInputWeights(previousLayer);
-        }
+        currentLayer.updateNeuronsInputWeights(previousLayer);
+    }
+}
+
+void NeuralNetwork::getResults(vector<nnweight_t> &resultVals) const {
+    resultVals.clear();
+
+    for (size_t i = 0; i < layers_.back().layerSize(); i++) {
+        resultVals.push_back(layers_.back().getNeuronOutputValue(i));
     }
 }

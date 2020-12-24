@@ -7,7 +7,9 @@ class Connection {
     public:
         Connection();
         Connection(nnweight_t weight);
+        void setWeight(nnweight_t newWeight);
         nnweight_t getWeight();
+        void setDeltaWeight(nnweight_t newDeltaWeight);
         nnweight_t getDeltaWeight();
     private:
         nnweight_t weight_;

@@ -22,3 +22,11 @@ nnweight_t Connection::getWeight() {
 nnweight_t Connection::getDeltaWeight() {
     return deltaWeight_;
 }
+
+void Connection::setDeltaWeight(nnweight_t newDeltaWeight) {
+    deltaWeight_ = newDeltaWeight;
+}
+
+void Connection::setWeight(nnweight_t newWeight) {
+    weight_ += newWeight;
+}
