@@ -1,3 +1,0 @@
-/Users/michalmokros/Documents/Muni/pv021/pv021-neural-network/build/CMakeFiles/rebuild_cache.dir
-/Users/michalmokros/Documents/Muni/pv021/pv021-neural-network/build/CMakeFiles/edit_cache.dir
-/Users/michalmokros/Documents/Muni/pv021/pv021-neural-network/build/CMakeFiles/hw01_main.dir
