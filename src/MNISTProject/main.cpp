@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 #include "CSVDataReader.hpp"
 #include "NeuralNetwork.hpp"
 
@@ -23,6 +24,8 @@ int main() {
     vector<double> inputVals, targetVals, resultVals;
     int trainingPass = 0;
 
+    std::chrono::steady_clock::time_point begin = chrono::steady_clock::now();
+    
     while (!trainData.isEndOfFile()) {
         ++trainingPass;
         cout << endl << "Pass " << trainingPass;
@@ -41,6 +44,8 @@ int main() {
 
         cout << "Net recent average error: " << network.getRecentAverageError() << endl;
     }
-
+    
+    chrono::steady_clock::time_point end = chrono::steady_clock::now();
+    cout << "Time difference = " << chrono::duration_cast<chrono::milliseconds>(end - begin).count() << "[ms]" << endl;
     cout << endl << "Done" << endl;
 }
