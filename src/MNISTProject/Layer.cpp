@@ -1,10 +1,11 @@
 #include "Layer.hpp"
 
-nnweight_t Layer::eta = 0.15;
+nnweight_t Layer::eta = 0.2;
 nnweight_t Layer::alpha = 0.5;
 
-Layer::Layer(vector<Neuron> neurons) {
+Layer::Layer(vector<Neuron> &neurons) {
     neurons_ = neurons;
+    neurons_.back().setOutputValue(1.0);
 }
 
 void Layer::feedForward(Layer &previousLayer) {
@@ -32,32 +33,32 @@ Neuron& Layer::getNeuronAt(size_t i) {
 
 void Layer::calculateNeuronOutputGradients(const vector<nnweight_t> &targetVals) {
     for (size_t i = 0; i < layerSize() - 1; i++) {
-        calculateOutputGradients(getNeuronAt(i), targetVals[i]);
+        calculateOutputGradients(neurons_[i], targetVals[i]);
     }
 }
 
 void Layer::calculateHiddenNeuronsGradients(Layer &nextLayer) {
     for (size_t i = 0; i < layerSize(); i++) {
-        calculateHiddenGradients(getNeuronAt(i), nextLayer);
+        calculateHiddenGradients(neurons_[i], nextLayer);
     }
 }
 
 void Layer::updateNeuronsInputWeights(Layer &previousLayer) {
-    for (size_t i = 0; i < layerSize(); i++) {
-        updateInputWeights(getNeuronAt(i), previousLayer);
+    for (size_t i = 0; i < layerSize() - 1; i++) {
+        updateInputWeights(neurons_[i], previousLayer);
     }
 }
 
 
 void Layer::calculateOutputGradients(Neuron &neuron, const nnweight_t targetVal) {
-    double delta = targetVal - neuron.getOutputValue();
-    double grad = delta * Neuron::applicationFunctionDerivationApprox(neuron.getOutputValue());
+    nnweight_t delta = targetVal - neuron.getOutputValue();
+    nnweight_t grad = delta * Neuron::applicationFunctionDerivationApprox(neuron.getOutputValue());
     neuron.setGradient(grad);
 }
 
 void Layer::calculateHiddenGradients(Neuron &neuron, Layer &nextLayer) {
     nnweight_t deltaWeightsSum = sumDeltaWeights(neuron, nextLayer);
-    double grad = deltaWeightsSum * Neuron::applicationFunctionDerivationApprox(neuron.getOutputValue());
+    nnweight_t grad = deltaWeightsSum * Neuron::applicationFunctionDerivationApprox(neuron.getOutputValue());
     neuron.setGradient(grad);
 }
 
@@ -65,7 +66,7 @@ void Layer::updateInputWeights(Neuron &neuron, Layer &previousLayer) {
     for (size_t i = 0; i < previousLayer.layerSize(); i++) {
         Neuron &prevNeuron = previousLayer.getNeuronAt(i);
         nnweight_t oldDeltaWeight = prevNeuron.getDeltaWeightOnConnection(neuron);
-        nnweight_t newDeltaWeight = eta * prevNeuron.getOutputValue() * neuron.getGradient() * alpha * oldDeltaWeight;
+        nnweight_t newDeltaWeight = eta * prevNeuron.getOutputValue() * neuron.getGradient() + alpha * oldDeltaWeight;
         prevNeuron.setDeltaWeightOnConnection(neuron, newDeltaWeight);
         prevNeuron.setWeightOnConnection(neuron, newDeltaWeight);
     }

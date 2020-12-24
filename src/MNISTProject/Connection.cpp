@@ -1,13 +1,9 @@
-#include <random>
+#include <cstdlib>
 #include "Connection.hpp"
 #include "NNTypes.hpp"
 
 Connection::Connection() {
-    weight_ = GetRandomWeight(0.0, 1.0);
-}
-
-Connection::Connection(nnweight_t inputWeight) {
-    weight_ = inputWeight;
+    weight_ = Connection::GetRandomWeight(0.0, 1.0);
 }
 
 nnweight_t Connection::GetRandomWeight(nnweight_t min, nnweight_t max) {

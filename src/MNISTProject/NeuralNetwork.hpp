@@ -13,6 +13,8 @@ public:
     void feedForward(const vector<nnweight_t> &inputVals);
     void backProp(const vector<nnweight_t> &targetVals);
     void getResults(vector<nnweight_t> &resultVals) const;
+    nnweight_t getRecentAverageError() const { return recentAverageError_; }
+    
 private:
     vector<Layer> layers_;
     nntopology_t layersSize_;

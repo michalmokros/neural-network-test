@@ -8,7 +8,7 @@ using namespace std;
 
 class Layer {
     public:
-        Layer(vector<Neuron> neurons);
+        Layer(vector<Neuron> &neurons);
         void feedForward(Layer &previousLayer);
         size_t layerSize() const;
         void setNeuronOutputValue(nntopology_t index, nnweight_t outputValue);

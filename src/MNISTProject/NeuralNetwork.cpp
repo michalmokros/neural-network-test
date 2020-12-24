@@ -6,7 +6,7 @@
 
 using namespace std;
 
-nnweight_t NeuralNetwork::recentAverageFactor_ = 100.0;
+nnweight_t NeuralNetwork::recentAverageFactor_ = 2000;
 
 NeuralNetwork::NeuralNetwork(const vector<nntopology_t> &topology) {
     layersSize_ = topology.size();
@@ -43,7 +43,7 @@ void NeuralNetwork::backProp(const vector<nnweight_t> &targetVals) {
     Layer &outputLayer = layers_.back();
     overallNetError_ = 0.0;
 
-    for (size_t i = 0; i < outputLayer.layerSize(); i++) {
+    for (size_t i = 0; i < outputLayer.layerSize() - 1; i++) {
         nnweight_t delta = targetVals[i] - outputLayer.getNeuronAt(i).getOutputValue();
         overallNetError_ += delta * delta;
     } 
@@ -51,7 +51,8 @@ void NeuralNetwork::backProp(const vector<nnweight_t> &targetVals) {
     overallNetError_ /= outputLayer.layerSize() - 1;
     overallNetError_ = sqrt(overallNetError_);
 
-    recentAverageError_ = (recentAverageError_ * recentAverageFactor_ + overallNetError_) / (recentAverageFactor_ + 1.0); 
+    recentAverageError_ = (recentAverageError_ * recentAverageFactor_ + overallNetError_)
+     / (recentAverageFactor_ + 1.0); 
 
     outputLayer.calculateNeuronOutputGradients(targetVals);
 
@@ -72,7 +73,7 @@ void NeuralNetwork::backProp(const vector<nnweight_t> &targetVals) {
 void NeuralNetwork::getResults(vector<nnweight_t> &resultVals) const {
     resultVals.clear();
 
-    for (size_t i = 0; i < layers_.back().layerSize(); i++) {
+    for (size_t i = 0; i < layers_.back().layerSize() - 1; i++) {
         resultVals.push_back(layers_.back().getNeuronOutputValue(i));
     }
 }
