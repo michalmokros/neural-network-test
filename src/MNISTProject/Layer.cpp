@@ -9,7 +9,7 @@ Layer::Layer(vector<Neuron> &neurons) {
 }
 
 void Layer::feedForward(Layer &previousLayer) {
-    for (size_t i = 0; i < neurons_.size(); i++) {
+    for (size_t i = 0; i < neurons_.size() - 1; i++) {
         nnweight_t sum = 0.0;
         for (size_t j = 0; j < previousLayer.neurons_.size(); j++) {
             sum += previousLayer.neurons_[j].getOutputValue() * previousLayer.neurons_[j].getWeightOnConnection(neurons_[i]);

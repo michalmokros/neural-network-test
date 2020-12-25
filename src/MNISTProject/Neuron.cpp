@@ -17,11 +17,11 @@ nnweight_t Neuron::getOutputValue() const {
 }
 
 nnweight_t Neuron::applicationFunction(nnweight_t x) {
-    return tanh(x);
+    return tanhf(x);
 }
 
 nnweight_t Neuron::applicationFunctionDerivationApprox(nnweight_t x) {
-    return 1.0 - x * x;
+    return 1.0 - tanhf(x) * tanhf(x);
 }
 
 nnweight_t Neuron::getWeightOnConnection(const Neuron &connectedNeuron) {

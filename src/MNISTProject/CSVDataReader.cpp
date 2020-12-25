@@ -45,9 +45,9 @@ void CSVDataReader::scaler(vector<nnweight_t> &line, nnweight_t maximum) {
 }
 
 vector<nnweight_t> CSVDataReader::one_hot_encoder(nntopology_t label, nntopology_t size) {
-    vector<nnweight_t> line(10);
+    vector<nnweight_t> line;
     for (nntopology_t i = 0; i < size; i++) {
-        line[i] = (label == i) ? 1 : 0;
+        line.push_back((label == i) ? 1 : 0);
     }
 
     return line;

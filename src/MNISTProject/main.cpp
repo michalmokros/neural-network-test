@@ -16,7 +16,7 @@ void showVectorVals(string label, vector<double> &v)
 }
 
 int main() {
-    vector<nntopology_t> topology{784, 10, 10};
+    vector<nntopology_t> topology{784, 128, 10};
     NeuralNetwork network(topology);
     
     CSVDataReader trainData("C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\data\\fashion_mnist_train_vectors.csv", "C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\data\\fashion_mnist_train_labels.csv");
