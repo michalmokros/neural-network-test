@@ -6,7 +6,7 @@ CSVDataReader::CSVDataReader(const string inputsFilename, const string targetsFi
     labelsDataFile_.open(targetsFilename);
 }
 
-void CSVDataReader::getNextInputs(vector<double> &inputVals) {
+void CSVDataReader::getNextInputs(vector<double> &inputVals, nnweight_t maximum) {
     inputVals.clear();
 
     string line;
@@ -18,18 +18,37 @@ void CSVDataReader::getNextInputs(vector<double> &inputVals) {
         inputVals.push_back(val);
         if(ss.peek() == ',') ss.ignore();
     }
+
+    scaler(inputVals, maximum);
 }
 
-void CSVDataReader::getTargetOutputs(vector<double> &targetOutputVals) {
+void CSVDataReader::getTargetOutputs(vector<double> &targetOutputVals, nntopology_t size) {
     targetOutputVals.clear();
 
     string line;
     getline(labelsDataFile_, line);
     stringstream ss(line);
 
-    nnweight_t val;
+    nntopology_t val;
     while (ss >> val) {
         targetOutputVals.push_back(val);
         if(ss.peek() == ',') ss.ignore();
     }
+
+    targetOutputVals = one_hot_encoder(targetOutputVals.back(), size);
+}
+
+void CSVDataReader::scaler(vector<nnweight_t> &line, nnweight_t maximum) {
+    for (size_t i = 0; i < line.size(); i++) {
+        line[i] = line[i] / maximum;
+    }
+}
+
+vector<nnweight_t> CSVDataReader::one_hot_encoder(nntopology_t label, nntopology_t size) {
+    vector<nnweight_t> line(10);
+    for (nntopology_t i = 0; i < size; i++) {
+        line[i] = (label == i) ? 1 : 0;
+    }
+
+    return line;
 }

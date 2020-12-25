@@ -16,10 +16,10 @@ void showVectorVals(string label, vector<double> &v)
 }
 
 int main() {
-    vector<nntopology_t> topology{2, 3, 1};
+    vector<nntopology_t> topology{784, 10, 10};
     NeuralNetwork network(topology);
     
-    CSVDataReader trainData("C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\src\\MNISTProject\\xortraindata.csv", "C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\src\\MNISTProject\\xorlabels.csv");
+    CSVDataReader trainData("C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\data\\fashion_mnist_train_vectors.csv", "C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\data\\fashion_mnist_train_labels.csv");
 
     vector<double> inputVals, targetVals, resultVals;
     int trainingPass = 0;
@@ -30,14 +30,14 @@ int main() {
         ++trainingPass;
         cout << endl << "Pass " << trainingPass;
 
-        trainData.getNextInputs(inputVals);
+        trainData.getNextInputs(inputVals, 255.0);
         showVectorVals(": Inputs:", inputVals);
         network.feedForward(inputVals);
 
         network.getResults(resultVals);
         showVectorVals("Outputs:", resultVals);
 
-        trainData.getTargetOutputs(targetVals);
+        trainData.getTargetOutputs(targetVals, 10);
         showVectorVals("Targets:", targetVals);
 
         network.backProp(targetVals);

@@ -6,7 +6,7 @@
 
 using namespace std;
 
-nnweight_t NeuralNetwork::recentAverageFactor_ = 2000;
+nnweight_t NeuralNetwork::recentAverageFactor_ = 0;
 
 NeuralNetwork::NeuralNetwork(const vector<nntopology_t> &topology) {
     layersSize_ = topology.size();
