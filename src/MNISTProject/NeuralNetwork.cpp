@@ -77,3 +77,11 @@ void NeuralNetwork::getResults(vector<nnweight_t> &resultVals) const {
         resultVals.push_back(layers_.back().getNeuronOutputValue(i));
     }
 }
+
+void NeuralNetwork::getRResults(vector<nnweight_t> &resultVals) {
+    resultVals.clear();
+
+    for (size_t i = 0; i < layers_.back().layerSize() - 1; i++) {
+        resultVals.push_back(layers_.back().getNeuronAt(i).getROutputValue());
+    }
+}

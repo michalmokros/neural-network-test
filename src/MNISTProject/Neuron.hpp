@@ -11,9 +11,12 @@ class Neuron {
     public:
         Neuron(const nntopology_t outputsNumber, const nntopology_t neuronIndex);
         void setOutputValue(nnweight_t outputValue);
+        void setOutputRValue(nnweight_t routputValue);
         nnweight_t getOutputValue() const;
+        nnweight_t getROutputValue();
         void setDeltaWeightOnConnection(const Neuron &connectedNeuron, nnweight_t newDeltaWeight);
         void setWeightOnConnection(const Neuron &connectedNeuron, nnweight_t newWeight);
+        void setROutputValue(nnweight_t routputValue);
         nnweight_t getWeightOnConnection(const Neuron &connectedNeuron);
         nnweight_t getWeightOnConnection(size_t connectionIndex);
         nnweight_t getDeltaWeightOnConnection(const Neuron &connectedNeuron);
@@ -25,6 +28,7 @@ class Neuron {
     private:
         nntopology_t neuronIndex_;
         nnweight_t outputValue_;
+        nnweight_t routputValue_;
         nnweight_t gradient_;
         vector<Connection> outConnections_;
 };

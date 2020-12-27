@@ -1,6 +1,6 @@
 #include "Layer.hpp"
 
-nnweight_t Layer::eta = 0.2;
+nnweight_t Layer::eta = 0.15;
 nnweight_t Layer::alpha = 0.5;
 
 Layer::Layer(vector<Neuron> &neurons) {
@@ -15,6 +15,7 @@ void Layer::feedForward(Layer &previousLayer) {
             sum += previousLayer.neurons_[j].getOutputValue() * previousLayer.neurons_[j].getWeightOnConnection(neurons_[i]);
         }
 
+        neurons_[i].setROutputValue(sum);
         neurons_[i].setOutputValue(Neuron::applicationFunction(sum));
     }
 }

@@ -13,6 +13,7 @@ public:
     void feedForward(const vector<nnweight_t> &inputVals);
     void backProp(const vector<nnweight_t> &targetVals);
     void getResults(vector<nnweight_t> &resultVals) const;
+    void getRResults(vector<nnweight_t> &resultVals);
     nnweight_t getRecentAverageError() const { return recentAverageError_; }
     
 private:

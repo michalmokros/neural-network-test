@@ -12,16 +12,24 @@ void Neuron::setOutputValue(nnweight_t outputValue) {
     outputValue_ = outputValue;
 }
 
+void Neuron::setROutputValue(nnweight_t routputValue) {
+    routputValue_ = routputValue;
+}
+
 nnweight_t Neuron::getOutputValue() const {
     return outputValue_;
 }
 
+nnweight_t Neuron::getROutputValue() {
+    return routputValue_;
+}
+
 nnweight_t Neuron::applicationFunction(nnweight_t x) {
-    return tanhf(x);
+    return tanh(x);
 }
 
 nnweight_t Neuron::applicationFunctionDerivationApprox(nnweight_t x) {
-    return 1.0 - tanhf(x) * tanhf(x);
+    return 1 - x * x;
 }
 
 nnweight_t Neuron::getWeightOnConnection(const Neuron &connectedNeuron) {

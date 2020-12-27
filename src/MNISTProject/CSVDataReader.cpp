@@ -6,7 +6,7 @@ CSVDataReader::CSVDataReader(const string inputsFilename, const string targetsFi
     labelsDataFile_.open(targetsFilename);
 }
 
-void CSVDataReader::getNextInputs(vector<double> &inputVals, nnweight_t maximum) {
+void CSVDataReader::getNextInputs(vector<double> &inputVals, nnweight_t rangeMin, nnweight_t rangeMax, nnweight_t desiredMin, nnweight_t desiredMax) {
     inputVals.clear();
 
     string line;
@@ -19,7 +19,7 @@ void CSVDataReader::getNextInputs(vector<double> &inputVals, nnweight_t maximum)
         if(ss.peek() == ',') ss.ignore();
     }
 
-    scaler(inputVals, maximum);
+    scaler(inputVals, rangeMin, rangeMax, desiredMin, desiredMax);
 }
 
 void CSVDataReader::getTargetOutputs(vector<double> &targetOutputVals, nntopology_t size) {
@@ -38,9 +38,9 @@ void CSVDataReader::getTargetOutputs(vector<double> &targetOutputVals, nntopolog
     targetOutputVals = one_hot_encoder(targetOutputVals.back(), size);
 }
 
-void CSVDataReader::scaler(vector<nnweight_t> &line, nnweight_t maximum) {
+void CSVDataReader::scaler(vector<nnweight_t> &line, nnweight_t rangeMin, nnweight_t rangeMax, nnweight_t desiredMin, nnweight_t desiredMax) {
     for (size_t i = 0; i < line.size(); i++) {
-        line[i] = line[i] / maximum;
+        line[i] = (rangeMax - rangeMin) * (line[i] - desiredMin)/(desiredMax - desiredMin) + rangeMin;
     }
 }
 
