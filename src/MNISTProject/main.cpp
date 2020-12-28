@@ -16,9 +16,9 @@ void showVectorVals(string label, vector<double> &v)
 }
 
 int main() {
-    vector<nntopology_t> topology{784, 10};
-    // vector<nntopology_t> topology{2, 4, 2};
-    NeuralNetwork network(topology);
+    NNInfo nnInfo;
+    nnInfo.topology = vector<Topology>{Topology(784, ActivationFunctionType::RELU), Topology(64, ActivationFunctionType::RELU), Topology(10, ActivationFunctionType::SOFTMAX)};
+    NeuralNetwork network(nnInfo);
     
     CSVDataReader trainData("C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\data\\fashion_mnist_train_vectors.csv", "C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\data\\fashion_mnist_train_labels.csv");
     // CSVDataReader trainData("C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\src\\MNISTProject\\xortraindata.csv", "C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\src\\MNISTProject\\xorlabels.csv");
@@ -30,24 +30,24 @@ int main() {
     
     while (!trainData.isEndOfFile()) {
         ++trainingPass;
-        cout << endl << "Pass " << trainingPass;
+        if (trainingPass % 1000 == 0) cout << endl << "Pass " << trainingPass;
 
-        trainData.getNextInputs(inputVals, 0.0, 255.0, -0.95, 0.95);
-        showVectorVals(": Inputs:", inputVals);
+        trainData.getNextInputs(inputVals, 0.0, 255.0, 0.05, 0.95);
+        if (trainingPass % 1000 == 0) showVectorVals(": Inputs:", inputVals);
         network.feedForward(inputVals);
 
         network.getResults(resultVals);
-        showVectorVals("Outputs:", resultVals);
+        if (trainingPass % 1000 == 0) showVectorVals("Outputs:", resultVals);
 
         network.getRResults(resultVals);
-        showVectorVals("ROutputs:", resultVals);
+        if (trainingPass % 1000 == 0) showVectorVals("ROutputs:", resultVals);
 
         trainData.getTargetOutputs(targetVals, 10);
-        showVectorVals("Targets:", targetVals);
+        if (trainingPass % 1000 == 0) showVectorVals("Targets:", targetVals);
 
         network.backProp(targetVals);
 
-        cout << "Net recent average error: " << network.getRecentAverageError() << endl;
+        if (trainingPass % 1000 == 0) cout << "Net recent average error: " << network.getRecentAverageError() << endl;
     }
     
     chrono::steady_clock::time_point end = chrono::steady_clock::now();

@@ -3,17 +3,20 @@
 
 #include <vector>
 #include "Layer.hpp"
+#include "NNInfo.hpp"
 #include "NNTypes.hpp"
 
 using namespace std;
 
 class NeuralNetwork {
 public:
-    NeuralNetwork(const vector<nntopology_t> &topology);
+    NeuralNetwork(const NNInfo &nninfo);
+    
     void feedForward(const vector<nnweight_t> &inputVals);
     void backProp(const vector<nnweight_t> &targetVals);
     void getResults(vector<nnweight_t> &resultVals) const;
-    void getRResults(vector<nnweight_t> &resultVals);
+    void getRResults(vector<nnweight_t> &resultVals) const;
+    
     nnweight_t getRecentAverageError() const { return recentAverageError_; }
     
 private:

@@ -10,21 +10,29 @@ using namespace std;
 class Neuron {
     public:
         Neuron(const nntopology_t outputsNumber, const nntopology_t neuronIndex);
-        void setOutputValue(nnweight_t outputValue);
-        void setOutputRValue(nnweight_t routputValue);
+        
         nnweight_t getOutputValue() const;
-        nnweight_t getROutputValue();
-        void setDeltaWeightOnConnection(const Neuron &connectedNeuron, nnweight_t newDeltaWeight);
-        void setWeightOnConnection(const Neuron &connectedNeuron, nnweight_t newWeight);
+        void setOutputValue(nnweight_t outputValue);
+                
+        nnweight_t getROutputValue() const;
         void setROutputValue(nnweight_t routputValue);
-        nnweight_t getWeightOnConnection(const Neuron &connectedNeuron);
-        nnweight_t getWeightOnConnection(size_t connectionIndex);
-        nnweight_t getDeltaWeightOnConnection(const Neuron &connectedNeuron);
+        
+        nnweight_t getGradient() const;
         void setGradient(nnweight_t gradient);
-        nnweight_t getGradient();
 
-        static nnweight_t applicationFunction(nnweight_t x);
-        static nnweight_t applicationFunctionDerivationApprox(nnweight_t x);
+        nnweight_t getWeightOnConnection(const Neuron &connectedNeuron) const;
+        nnweight_t getWeightOnConnection(size_t connectionIndex) const;
+        void setWeightOnConnection(const Neuron &connectedNeuron, nnweight_t newWeight);
+        
+        nnweight_t getDeltaWeightOnConnection(const Neuron &connectedNeuron) const;
+        void setDeltaWeightOnConnection(const Neuron &connectedNeuron, nnweight_t newDeltaWeight);
+        
+        static nnweight_t tanhActivationFunction(nnweight_t x);
+        static nnweight_t tanhActivationFunctionDerivation(nnweight_t x);
+        static nnweight_t reluActivationFunction(nnweight_t x);
+        static nnweight_t reluActivationFunctionDerivation(nnweight_t x);
+        static nnweight_t softmaxActivationFunction(nnweight_t x, nnweight_t sum);
+    
     private:
         nntopology_t neuronIndex_;
         nnweight_t outputValue_;

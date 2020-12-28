@@ -6,10 +6,13 @@
 class Connection {
     public:
         Connection();
+
+        nnweight_t getWeight() const;
         void setWeight(nnweight_t newWeight);
-        nnweight_t getWeight();
+
+        nnweight_t getDeltaWeight() const;
         void setDeltaWeight(nnweight_t newDeltaWeight);
-        nnweight_t getDeltaWeight();
+   
     private:
         nnweight_t weight_;
         nnweight_t deltaWeight_;

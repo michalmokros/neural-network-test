@@ -1,6 +1,26 @@
 #include <cmath>
 #include "Neuron.hpp"
 
+nnweight_t Neuron::tanhActivationFunction(nnweight_t x) {
+    return tanh(x);
+}
+
+nnweight_t Neuron::tanhActivationFunctionDerivation(nnweight_t x) {
+    return 1 - x * x;
+}
+
+nnweight_t Neuron::reluActivationFunction(nnweight_t x) {
+    return x < 0 ? 0 : x;
+}
+
+nnweight_t Neuron::reluActivationFunctionDerivation(nnweight_t x) {
+    return x < 0 ? 0 : 1;
+}
+
+nnweight_t Neuron::softmaxActivationFunction(nnweight_t x, nnweight_t sum) {
+    return exp(x) / exp(sum);
+}
+
 Neuron::Neuron(const nntopology_t outputsNumber, const nntopology_t neuronIndex) {
     neuronIndex_ = neuronIndex;
     for (nntopology_t i = 0; i < outputsNumber; i++) {
@@ -8,55 +28,46 @@ Neuron::Neuron(const nntopology_t outputsNumber, const nntopology_t neuronIndex)
     }
 }
 
+nnweight_t Neuron::getOutputValue() const {
+    return outputValue_;
+}
+
 void Neuron::setOutputValue(nnweight_t outputValue) {
     outputValue_ = outputValue;
+}
+
+nnweight_t Neuron::getROutputValue() const {
+    return routputValue_;
 }
 
 void Neuron::setROutputValue(nnweight_t routputValue) {
     routputValue_ = routputValue;
 }
 
-nnweight_t Neuron::getOutputValue() const {
-    return outputValue_;
+nnweight_t Neuron::getGradient() const {
+    return gradient_;
 }
-
-nnweight_t Neuron::getROutputValue() {
-    return routputValue_;
-}
-
-nnweight_t Neuron::applicationFunction(nnweight_t x) {
-    return tanh(x);
-}
-
-nnweight_t Neuron::applicationFunctionDerivationApprox(nnweight_t x) {
-    return 1 - x * x;
-}
-
-nnweight_t Neuron::getWeightOnConnection(const Neuron &connectedNeuron) {
-    return outConnections_[connectedNeuron.neuronIndex_].getWeight();
-}
-
-nnweight_t Neuron::getWeightOnConnection(size_t connectionIndex) {
-    return outConnections_[connectionIndex].getWeight();
-}
-
-nnweight_t Neuron::getDeltaWeightOnConnection(const Neuron &connectedNeuron) {
-    return outConnections_[connectedNeuron.neuronIndex_].getDeltaWeight();
-}
-
 
 void Neuron::setGradient(nnweight_t gradient) {
     gradient_ = gradient;
 }
 
-nnweight_t Neuron::getGradient() {
-    return gradient_;
+nnweight_t Neuron::getWeightOnConnection(const Neuron &connectedNeuron) const {
+    return outConnections_[connectedNeuron.neuronIndex_].getWeight();
 }
 
-void Neuron::setDeltaWeightOnConnection(const Neuron &connectedNeuron, nnweight_t newDeltaWeight) {
-    outConnections_[connectedNeuron.neuronIndex_].setDeltaWeight(newDeltaWeight);
+nnweight_t Neuron::getWeightOnConnection(size_t connectionIndex) const {
+    return outConnections_[connectionIndex].getWeight();
 }
 
 void Neuron::setWeightOnConnection(const Neuron &connectedNeuron, nnweight_t newWeight) {
     outConnections_[connectedNeuron.neuronIndex_].setWeight(newWeight);
+}
+
+nnweight_t Neuron::getDeltaWeightOnConnection(const Neuron &connectedNeuron) const {
+    return outConnections_[connectedNeuron.neuronIndex_].getDeltaWeight();
+}
+
+void Neuron::setDeltaWeightOnConnection(const Neuron &connectedNeuron, nnweight_t newDeltaWeight) {
+    outConnections_[connectedNeuron.neuronIndex_].setDeltaWeight(newDeltaWeight);
 }
