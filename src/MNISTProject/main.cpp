@@ -17,11 +17,13 @@ void showVectorVals(string label, vector<double> &v)
 
 int main() {
     NNInfo nnInfo;
-    nnInfo.topology = vector<Topology>{Topology(784, ActivationFunctionType::RELU), Topology(64, ActivationFunctionType::RELU), Topology(10, ActivationFunctionType::SOFTMAX)};
+    // nnInfo.topology = vector<Topology>{Topology(784, ActivationFunctionType::RELU), Topology(64, ActivationFunctionType::RELU), Topology(10, ActivationFunctionType::SOFTMAX)};
+    nnInfo.topology = vector<Topology>{Topology(2, ActivationFunctionType::TANH), Topology(4, ActivationFunctionType::TANH), Topology(2, ActivationFunctionType::TANH)};
+
     NeuralNetwork network(nnInfo);
     
-    CSVDataReader trainData("C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\data\\fashion_mnist_train_vectors.csv", "C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\data\\fashion_mnist_train_labels.csv");
-    // CSVDataReader trainData("C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\src\\MNISTProject\\xortraindata.csv", "C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\src\\MNISTProject\\xorlabels.csv");
+    // CSVDataReader trainData("C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\data\\fashion_mnist_train_vectors.csv", "C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\data\\fashion_mnist_train_labels.csv");
+    CSVDataReader trainData("C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\src\\MNISTProject\\xortraindata.csv", "C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\src\\MNISTProject\\xorlabels.csv");
 
     vector<double> inputVals, targetVals, resultVals;
     int trainingPass = 0;
@@ -30,24 +32,24 @@ int main() {
     
     while (!trainData.isEndOfFile()) {
         ++trainingPass;
-        if (trainingPass % 1000 == 0) cout << endl << "Pass " << trainingPass;
+        cout << endl << "Pass " << trainingPass;
 
-        trainData.getNextInputs(inputVals, 0.0, 255.0, 0.05, 0.95);
-        if (trainingPass % 1000 == 0) showVectorVals(": Inputs:", inputVals);
+        trainData.getNextInputs(inputVals, 0.0, 1.0, 0, 1);
+        showVectorVals(": Inputs:", inputVals);
         network.feedForward(inputVals);
 
         network.getResults(resultVals);
-        if (trainingPass % 1000 == 0) showVectorVals("Outputs:", resultVals);
+        showVectorVals("Outputs:", resultVals);
 
-        network.getRResults(resultVals);
-        if (trainingPass % 1000 == 0) showVectorVals("ROutputs:", resultVals);
+        // network.getRResults(resultVals);
+        // showVectorVals("ROutputs:", resultVals);
 
-        trainData.getTargetOutputs(targetVals, 10);
-        if (trainingPass % 1000 == 0) showVectorVals("Targets:", targetVals);
+        trainData.getTargetOutputs(targetVals, 2);
+        showVectorVals("Targets:", targetVals);
 
         network.backProp(targetVals);
 
-        if (trainingPass % 1000 == 0) cout << "Net recent average error: " << network.getRecentAverageError() << endl;
+        cout << "Net recent average error: " << network.getRecentAverageError() << endl;
     }
     
     chrono::steady_clock::time_point end = chrono::steady_clock::now();

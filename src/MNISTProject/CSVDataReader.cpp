@@ -40,7 +40,7 @@ void CSVDataReader::getTargetOutputs(vector<double> &targetOutputVals, nntopolog
 
 void CSVDataReader::scaler(vector<nnweight_t> &line, nnweight_t rangeMin, nnweight_t rangeMax, nnweight_t desiredMin, nnweight_t desiredMax) {
     for (size_t i = 0; i < line.size(); i++) {
-        line[i] = (rangeMax - rangeMin) * (line[i] - desiredMin)/(desiredMax - desiredMin) + rangeMin;
+        line[i] = (desiredMax - desiredMin) * (line[i] - rangeMin)/(rangeMax - rangeMin) + desiredMin;
     }
 }
 

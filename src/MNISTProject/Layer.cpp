@@ -7,7 +7,7 @@ nnweight_t Layer::alpha = 0.5;
 Layer::Layer(vector<Neuron> &neurons, ActivationFunctionType activationType) {
     neurons_ = neurons;
     activationFunctionType_ = activationType;
-    neurons_.back().setOutputValue(0.01);
+    neurons_.back().setOutputValue(1.0);
 }
 
 void Layer::feedForward(Layer &previousLayer) {
