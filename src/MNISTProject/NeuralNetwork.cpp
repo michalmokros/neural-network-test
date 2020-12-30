@@ -25,13 +25,13 @@ NeuralNetwork::NeuralNetwork(const NNInfo &nninfo) {
 
 void NeuralNetwork::trainOnline(const vector<nnweight_t> &inputVals, const vector<nnweight_t> &targetVals, vector<nnweight_t> &resultVals) {
     feedForward(inputVals);
-    getResults(resultVals);
+    getResults(resultVals, false);
     backProp(targetVals);
 }
 
 void NeuralNetwork::classify(const vector<nnweight_t> &inputVals, vector<nnweight_t> &resultVals) {
     feedForward(inputVals);
-    getResults(resultVals);
+    getResults(resultVals, false);
 }
 
 void NeuralNetwork::train(const vector<vector<nnweight_t>> &inputVals, const vector<vector<nnweight_t>> &targetVals) {
@@ -96,24 +96,30 @@ void NeuralNetwork::backProp(const vector<nnweight_t> &targetVals) {
     }
 }
 
-void NeuralNetwork::getResults(vector<nnweight_t> &resultVals) const {
+void NeuralNetwork::getResults(vector<nnweight_t> &resultVals, bool hotEncoded) const {
     resultVals.clear();
 
-    size_t maxIndex = 0;
-    nnweight_t maxNum = 0;
+    if (hotEncoded) {
+        size_t maxIndex = 0;
+        nnweight_t maxNum = 0;
 
-    for (size_t i = 0; i < layers_.back().getLayerNeuronsCount() - 1; i++) {
-        if (layers_.back().getNeuronOutputValue(i) > maxNum) {
-            maxIndex = i;
-            maxNum = layers_.back().getNeuronOutputValue(i);
+        for (size_t i = 0; i < layers_.back().getLayerNeuronsCount() - 1; i++) {
+            if (layers_.back().getNeuronOutputValue(i) > maxNum) {
+                maxIndex = i;
+                maxNum = layers_.back().getNeuronOutputValue(i);
+            }
         }
-    }
 
-    for (size_t i = 0; i < layers_.back().getLayerNeuronsCount() - 1; i++) {
-        if (i == maxIndex) {
-            resultVals.push_back(1);
-        } else {
-            resultVals.push_back(0);
+        for (size_t i = 0; i < layers_.back().getLayerNeuronsCount() - 1; i++) {
+            if (i == maxIndex) {
+                resultVals.push_back(1);
+            } else {
+                resultVals.push_back(0);
+            }
+        }
+    } else {
+        for (size_t i = 0; i < layers_.back().getLayerNeuronsCount() - 1; i++) {
+            resultVals.push_back(layers_.back().getNeuronOutputValue(i));
         }
     }
 }

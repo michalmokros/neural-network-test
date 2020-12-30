@@ -25,7 +25,7 @@ private:
 
     void feedForward(const vector<nnweight_t> &inputVals);
     void backProp(const vector<nnweight_t> &targetVals);
-    void getResults(vector<nnweight_t> &resultVals) const;
+    void getResults(vector<nnweight_t> &resultVals, bool hotEncoded) const;
     
     nnweight_t getRecentAverageError() const { return recentAverageError_; }
 };
