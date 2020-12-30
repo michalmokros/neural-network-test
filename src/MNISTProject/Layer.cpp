@@ -1,3 +1,4 @@
+#include <cmath>
 #include <stdexcept>
 #include "Layer.hpp"
 
@@ -11,13 +12,22 @@ Layer::Layer(vector<Neuron> &neurons, ActivationFunctionType activationType) {
 }
 
 void Layer::feedForward(Layer &previousLayer) {
+    switch (activationFunctionType_) {
+        case ActivationFunctionType::SOFTMAX:
+            softmaxFeedForward(previousLayer);
+            break;
+        default:
+            classicFeedForward(previousLayer);
+            break;
+    }
+}
+
+void Layer::classicFeedForward(Layer &previousLayer) {
     for (size_t i = 0; i < neurons_.size() - 1; i++) {
         nnweight_t sum = 0.0;
         for (size_t j = 0; j < previousLayer.neurons_.size(); j++) {
             sum += previousLayer.neurons_[j].getOutputValue() * previousLayer.neurons_[j].getWeightOnConnection(neurons_[i]);
         }
-
-        neurons_[i].setROutputValue(sum);
 
         switch (activationFunctionType_) {
             case ActivationFunctionType::RELU:
@@ -26,9 +36,6 @@ void Layer::feedForward(Layer &previousLayer) {
             case ActivationFunctionType::TANH:
                 neurons_[i].setOutputValue(Neuron::tanhActivationFunction(sum));
                 break;
-            case ActivationFunctionType::SOFTMAX:
-                neurons_[i].setOutputValue(Neuron::softmaxActivationFunction(previousLayer.neurons_[i].getOutputValue(), sum));
-                break;
             default:
                 runtime_error("Not implemented");
                 break;
@@ -36,12 +43,28 @@ void Layer::feedForward(Layer &previousLayer) {
     }
 }
 
-size_t Layer::getLayerNeuronsCount() const {
-    return neurons_.size();
+void Layer::softmaxFeedForward(Layer &previousLayer) {
+    nnweight_t sumAllWeights = 0.0;
+    for (size_t i = 0; i < neurons_.size() - 1; i++) {
+        nnweight_t sumOneWeight = 0.0;
+        for (size_t j = 0; j < previousLayer.neurons_.size(); j++) {
+            sumOneWeight += previousLayer.neurons_[j].getOutputValue() * previousLayer.neurons_[j].getWeightOnConnection(neurons_[i]);
+        }
+        sumAllWeights += exp(sumOneWeight);
+    }
+
+    for (size_t i = 0; i < neurons_.size() - 1; i++) {
+        nnweight_t toINeuronSum = 0.0;
+        for (size_t j = 0; j < previousLayer.neurons_.size(); j++) {
+            toINeuronSum += previousLayer.neurons_[j].getOutputValue() * previousLayer.neurons_[j].getWeightOnConnection(neurons_[i]);
+        }
+
+        neurons_[i].setOutputValue(Neuron::softmaxActivationFunction(toINeuronSum, sumAllWeights));
+    } 
 }
 
-nnweight_t Layer::getNeuronROutputValue(size_t i) const {
-    return neurons_[i].getROutputValue();
+size_t Layer::getLayerNeuronsCount() const {
+    return neurons_.size();
 }
 
 void Layer::setNeuronOutputValue(nntopology_t index, nnweight_t outputValue) {
@@ -70,30 +93,56 @@ void Layer::updateNeuronsInputWeights(Layer &previousLayer) {
     }
 }
 
-
 void Layer::calculateOutputGradients(Neuron &neuron, const nnweight_t targetVal) {
     switch (activationFunctionType_) {
         case ActivationFunctionType::SOFTMAX:
+        {
             neuron.setGradient(targetVal - neuron.getOutputValue());
             break;
-        default:
+        }
+        case ActivationFunctionType::TANH:
+        {
             nnweight_t delta = targetVal - neuron.getOutputValue();
             nnweight_t grad = delta * Neuron::tanhActivationFunctionDerivation(neuron.getOutputValue());
             neuron.setGradient(grad);
             break;
+        }
+        case ActivationFunctionType::RELU:
+        {
+            nnweight_t delta = targetVal - neuron.getOutputValue();
+            nnweight_t grad = delta * Neuron::reluActivationFunctionDerivation(neuron.getOutputValue());
+            neuron.setGradient(grad);
+            break;
+        }
+        default:
+        {
+            runtime_error("Not implemented");
+            break;
+        }
     }
 }
 
 void Layer::calculateHiddenGradients(Neuron &neuron, Layer &nextLayer) {
     switch (activationFunctionType_) {
-        case ActivationFunctionType::SOFTMAX:
-            throw runtime_error("Not implemented");
-            break;
-        default:
+        case ActivationFunctionType::TANH:
+        {
             nnweight_t deltaWeightsSum = sumDeltaWeights(neuron, nextLayer);
             nnweight_t grad = deltaWeightsSum * Neuron::tanhActivationFunctionDerivation(neuron.getOutputValue());
             neuron.setGradient(grad);
             break;
+        }
+        case ActivationFunctionType::RELU:
+        {
+            nnweight_t deltaWeightsSum = sumDeltaWeights(neuron, nextLayer);
+            nnweight_t grad = deltaWeightsSum * Neuron::reluActivationFunctionDerivation(neuron.getOutputValue());
+            neuron.setGradient(grad);
+            break;
+        }
+        default:
+        {
+            runtime_error("Not implemented");
+            break;
+        }
     }
 }
 

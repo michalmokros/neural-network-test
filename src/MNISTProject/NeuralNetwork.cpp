@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <cmath>
@@ -20,6 +21,32 @@ NeuralNetwork::NeuralNetwork(const NNInfo &nninfo) {
 
         layers_.push_back(Layer(layerVector, nninfo.topology[i].activationFunction));
     }
+}
+
+void NeuralNetwork::trainOnline(const vector<nnweight_t> &inputVals, const vector<nnweight_t> &targetVals, vector<nnweight_t> &resultVals) {
+    feedForward(inputVals);
+    getResults(resultVals);
+    backProp(targetVals);
+}
+
+void NeuralNetwork::classify(const vector<nnweight_t> &inputVals, vector<nnweight_t> &resultVals) {
+    feedForward(inputVals);
+    getResults(resultVals);
+}
+
+void NeuralNetwork::train(const vector<vector<nnweight_t>> &inputVals, const vector<vector<nnweight_t>> &targetVals) {
+    // feedForward(inputVals);
+    // backProp(targetVals);
+}
+
+void shuffleVectors(const vector<vector<nnweight_t>> &inputVals, const vector<vector<nnweight_t>> &targetVals) {
+    // std::vector<int> indexes;
+    // indexes.reserve(inputVals.size());
+    // for (int i = 0; i < inputVals.size(); ++i)
+    //     indexes.push_back(i);
+    // shuffle(indexes.begin(), indexes.end());
+
+    // for ( std::vector<int>::iterator it1 = indexes.begin(); it1 != indexes.end(); ++it1 ) {}
 }
 
 void NeuralNetwork::feedForward(const vector<nnweight_t> &inputVals) {
@@ -72,15 +99,21 @@ void NeuralNetwork::backProp(const vector<nnweight_t> &targetVals) {
 void NeuralNetwork::getResults(vector<nnweight_t> &resultVals) const {
     resultVals.clear();
 
+    size_t maxIndex = 0;
+    nnweight_t maxNum = 0;
+
     for (size_t i = 0; i < layers_.back().getLayerNeuronsCount() - 1; i++) {
-        resultVals.push_back(layers_.back().getNeuronOutputValue(i));
+        if (layers_.back().getNeuronOutputValue(i) > maxNum) {
+            maxIndex = i;
+            maxNum = layers_.back().getNeuronOutputValue(i);
+        }
     }
-}
-
-void NeuralNetwork::getRResults(vector<nnweight_t> &resultVals) const {
-    resultVals.clear();
 
     for (size_t i = 0; i < layers_.back().getLayerNeuronsCount() - 1; i++) {
-        resultVals.push_back(layers_.back().getNeuronROutputValue(i));
+        if (i == maxIndex) {
+            resultVals.push_back(1);
+        } else {
+            resultVals.push_back(0);
+        }
     }
 }

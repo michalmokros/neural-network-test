@@ -13,9 +13,6 @@ class Neuron {
         
         nnweight_t getOutputValue() const;
         void setOutputValue(nnweight_t outputValue);
-                
-        nnweight_t getROutputValue() const;
-        void setROutputValue(nnweight_t routputValue);
         
         nnweight_t getGradient() const;
         void setGradient(nnweight_t gradient);
@@ -36,7 +33,6 @@ class Neuron {
     private:
         nntopology_t neuronIndex_;
         nnweight_t outputValue_;
-        nnweight_t routputValue_;
         nnweight_t gradient_;
         vector<Connection> outConnections_;
 };

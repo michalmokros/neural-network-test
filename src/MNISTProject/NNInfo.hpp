@@ -7,9 +7,10 @@
 using namespace std;
 
 enum ActivationFunctionType {
-    TANH = 0,
-    RELU = 1,
-    SOFTMAX = 2
+    INPUT = 0,
+    TANH = 1,
+    RELU = 2,
+    SOFTMAX = 3
 };
 
 struct Topology {

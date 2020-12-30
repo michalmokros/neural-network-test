@@ -18,7 +18,7 @@ nnweight_t Neuron::reluActivationFunctionDerivation(nnweight_t x) {
 }
 
 nnweight_t Neuron::softmaxActivationFunction(nnweight_t x, nnweight_t sum) {
-    return exp(x) / exp(sum);
+    return exp(x) / sum;
 }
 
 Neuron::Neuron(const nntopology_t outputsNumber, const nntopology_t neuronIndex) {
@@ -34,14 +34,6 @@ nnweight_t Neuron::getOutputValue() const {
 
 void Neuron::setOutputValue(nnweight_t outputValue) {
     outputValue_ = outputValue;
-}
-
-nnweight_t Neuron::getROutputValue() const {
-    return routputValue_;
-}
-
-void Neuron::setROutputValue(nnweight_t routputValue) {
-    routputValue_ = routputValue;
 }
 
 nnweight_t Neuron::getGradient() const {

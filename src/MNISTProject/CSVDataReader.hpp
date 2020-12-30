@@ -14,8 +14,11 @@ class CSVDataReader
         CSVDataReader(const string inputsFilename, const string targetsFilename);
         bool isEndOfFile() { return trainingDataFile_.eof() || labelsDataFile_.eof(); }
 
-        void getNextInputs(vector<double> &inputVals, nnweight_t rangeMin, nnweight_t rangeMax, nnweight_t desiredMin, nnweight_t desiredMax);
-        void getTargetOutputs(vector<double> &targetOutputVals, nntopology_t size);
+        void getNextInputs(vector<nnweight_t> &inputVals, nnweight_t rangeMin, nnweight_t rangeMax, nnweight_t desiredMin, nnweight_t desiredMax);
+        void getTargetOutputs(vector<nnweight_t> &targetOutputVals, nntopology_t size);
+
+        void getAllInputs(vector<vector<nnweight_t>> &inputVals, nnweight_t rangeMin, nnweight_t rangeMax, nnweight_t desiredMin, nnweight_t desiredMax);
+        void getAllTargetOutputs(vector<vector<nnweight_t>> &targetOutputVals, nntopology_t size);
 
     private:
         ifstream trainingDataFile_;
