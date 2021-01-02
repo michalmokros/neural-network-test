@@ -1,8 +1,9 @@
+#include <float.h>
 #include <cmath>
 #include <stdexcept>
 #include "Layer.hpp"
 
-nnweight_t Layer::eta = 0.15;
+nnweight_t Layer::eta = 0.1;
 nnweight_t Layer::alpha = 0.5;
 
 Layer::Layer(vector<Neuron> &neurons, ActivationFunctionType activationType) {
@@ -23,6 +24,9 @@ void Layer::feedForward(Layer &previousLayer) {
 }
 
 void Layer::classicFeedForward(Layer &previousLayer) {
+    nnweight_t min = DBL_MAX;
+    nnweight_t max = DBL_MIN;
+
     for (size_t i = 0; i < neurons_.size() - 1; i++) {
         nnweight_t sum = 0.0;
         for (size_t j = 0; j < previousLayer.neurons_.size(); j++) {
@@ -31,16 +35,35 @@ void Layer::classicFeedForward(Layer &previousLayer) {
 
         switch (activationFunctionType_) {
             case ActivationFunctionType::RELU:
-                neurons_[i].setOutputValue(Neuron::reluActivationFunction(sum));
+            {
+                nnweight_t actVal = Neuron::reluActivationFunction(sum);
+                if (actVal > max) max = actVal;
+                if (actVal < min) min = actVal;
+                neurons_[i].setOutputValue(actVal);
                 break;
+            }
             case ActivationFunctionType::TANH:
+            {
                 neurons_[i].setOutputValue(Neuron::tanhActivationFunction(sum));
                 break;
+            }
             default:
+            {
                 runtime_error("Not implemented");
                 break;
+            }
         }
     }
+
+    if (activationFunctionType_ == ActivationFunctionType::RELU) {
+        for (size_t i = 0; i < neurons_.size() - 1; i++) {
+            neurons_[i].setOutputValue(scaler(neurons_[i].getOutputValue(), min, max, 0, 1));
+        }
+    }
+}
+
+nnweight_t Layer::scaler(nnweight_t val, nnweight_t rangeMin, nnweight_t rangeMax, nnweight_t desiredMin, nnweight_t desiredMax) {
+    return (desiredMax - desiredMin) * (val - rangeMin)/(rangeMax - rangeMin) + desiredMin;
 }
 
 void Layer::softmaxFeedForward(Layer &previousLayer) {
@@ -126,15 +149,15 @@ void Layer::calculateHiddenGradients(Neuron &neuron, Layer &nextLayer) {
     switch (activationFunctionType_) {
         case ActivationFunctionType::TANH:
         {
-            nnweight_t deltaWeightsSum = sumDeltaWeights(neuron, nextLayer);
-            nnweight_t grad = deltaWeightsSum * Neuron::tanhActivationFunctionDerivation(neuron.getOutputValue());
+            nnweight_t sumWeight = sumWeightGradient(neuron, nextLayer);
+            nnweight_t grad = sumWeight * Neuron::tanhActivationFunctionDerivation(neuron.getOutputValue());
             neuron.setGradient(grad);
             break;
         }
         case ActivationFunctionType::RELU:
         {
-            nnweight_t deltaWeightsSum = sumDeltaWeights(neuron, nextLayer);
-            nnweight_t grad = deltaWeightsSum * Neuron::reluActivationFunctionDerivation(neuron.getOutputValue());
+            nnweight_t sumWeight = sumWeightGradient(neuron, nextLayer);
+            nnweight_t grad = sumWeight * Neuron::reluActivationFunctionDerivation(neuron.getOutputValue());
             neuron.setGradient(grad);
             break;
         }
@@ -156,7 +179,7 @@ void Layer::updateInputWeights(Neuron &neuron, Layer &previousLayer) {
     }
 }
 
-nnweight_t Layer::sumDeltaWeights(Neuron &neuron, Layer &nextLayer) {
+nnweight_t Layer::sumWeightGradient(Neuron &neuron, Layer &nextLayer) {
     nnweight_t sum = 0.0;
     for (size_t i = 0; i < nextLayer.getLayerNeuronsCount() - 1; i++) {
         sum += neuron.getWeightOnConnection(i) * nextLayer.getNeuronAt(i).getGradient();

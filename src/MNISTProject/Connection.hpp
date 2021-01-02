@@ -1,11 +1,13 @@
 #ifndef Included_Connection_H
 #define Included_Connection_H
 
+#include "NNInfo.hpp"
 #include "NNTypes.hpp"
 
 class Connection {
     public:
         Connection();
+        Connection(ActivationFunctionType activationFunctionType, nntopology_t previousLayerSize);
 
         nnweight_t getWeight() const;
         void setWeight(nnweight_t newWeight);

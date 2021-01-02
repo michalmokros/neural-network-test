@@ -44,7 +44,7 @@ void testxordataset() {
 
 void testmnistdataset() {
     NNInfo nnInfo;
-    nnInfo.topology = vector<Topology>{Topology(784, ActivationFunctionType::INPUT), Topology(64, ActivationFunctionType::RELU), Topology(10, ActivationFunctionType::SOFTMAX)};
+    nnInfo.topology = vector<Topology>{Topology(784, ActivationFunctionType::INPUT), Topology(128, ActivationFunctionType::RELU), Topology(10, ActivationFunctionType::SOFTMAX)};
     NeuralNetwork network(nnInfo);
     CSVDataReader trainData("C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\data\\fashion_mnist_train_vectors.csv", "C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\data\\fashion_mnist_train_labels.csv");
 
@@ -69,7 +69,30 @@ void testmnistdataset() {
     cout << endl << "Done" << endl;    
 }
 
+void testmnisttrain() {
+    NNInfo nnInfo;
+    nnInfo.topology = vector<Topology>{Topology(784, ActivationFunctionType::INPUT), Topology(128, ActivationFunctionType::RELU), Topology(10, ActivationFunctionType::SOFTMAX)};
+    NeuralNetwork network(nnInfo);
+    CSVDataReader trainData("C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\data\\fashion_mnist_train_vectors.csv", "C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\data\\fashion_mnist_train_labels.csv");
+
+    vector<vector<nnweight_t>> inputVals, targetVals;
+
+    std::chrono::steady_clock::time_point begin = chrono::steady_clock::now();
+
+    trainData.getAllInputs(inputVals, 0.0, 255.0, 0.0, 1.0);
+    
+    trainData.getAllTargetOutputs(targetVals, 10);
+    
+    nnweight_t acc = network.train(inputVals, targetVals, 0.2, 5);
+
+    cout << "Accuracy = " << acc << endl;
+
+    chrono::steady_clock::time_point end = chrono::steady_clock::now();
+    cout << "Time difference = " << chrono::duration_cast<chrono::milliseconds>(end - begin).count() << "[ms]" << endl;
+}
+
 int main() {
     // testxordataset();
-    testmnistdataset();
+    // testmnistdataset();
+    testmnisttrain();
 }

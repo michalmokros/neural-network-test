@@ -31,10 +31,12 @@ class Layer {
         void calculateOutputGradients(Neuron &neuron, const nnweight_t targetVal);
         void calculateHiddenGradients(Neuron &neuron, Layer &nextLayer);
         void updateInputWeights(Neuron &neuron, Layer &previousLayer);
-        nnweight_t sumDeltaWeights(Neuron &neuron, Layer &nextLayer);
+        nnweight_t sumWeightGradient(Neuron &neuron, Layer &nextLayer);
 
         void classicFeedForward(Layer &previousLayer);
         void softmaxFeedForward(Layer &previousLayer);
+
+        static nnweight_t scaler(nnweight_t val, nnweight_t rangeMin, nnweight_t rangeMax, nnweight_t desiredMin, nnweight_t desiredMax);
 };
 
 #endif

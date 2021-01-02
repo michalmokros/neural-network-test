@@ -10,6 +10,7 @@ using namespace std;
 class Neuron {
     public:
         Neuron(const nntopology_t outputsNumber, const nntopology_t neuronIndex);
+        Neuron(const nntopology_t outputsNumber, const nntopology_t neuronIndex, ActivationFunctionType activationFunctionType, nntopology_t previousLayerSize); 
         
         nnweight_t getOutputValue() const;
         void setOutputValue(nnweight_t outputValue);

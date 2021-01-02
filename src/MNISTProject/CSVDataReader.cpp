@@ -1,3 +1,5 @@
+#include <chrono>
+#include <iostream>
 #include <sstream>
 #include "CSVDataReader.hpp"
 
@@ -39,7 +41,7 @@ void CSVDataReader::getTargetOutputs(vector<nnweight_t> &targetOutputVals, nntop
 }
 
 void CSVDataReader::getAllInputs(vector<vector<nnweight_t>> &inputVals, nnweight_t rangeMin, nnweight_t rangeMax, nnweight_t desiredMin, nnweight_t desiredMax) {
-    while (isEndOfFile()) {
+    while (!trainingDataFile_.eof()) {
         vector<nnweight_t> iv;
         getNextInputs(iv, rangeMin, rangeMax, desiredMin, desiredMax);
         inputVals.push_back(iv);
@@ -47,7 +49,7 @@ void CSVDataReader::getAllInputs(vector<vector<nnweight_t>> &inputVals, nnweight
 }
 
 void CSVDataReader::getAllTargetOutputs(vector<vector<nnweight_t>> &targetOutputVals, nntopology_t size) {
-    while (isEndOfFile()) {
+    while (!labelsDataFile_.eof()) {
         vector<nnweight_t> tv;
         getTargetOutputs(tv, size);
         targetOutputVals.push_back(tv);

@@ -28,6 +28,13 @@ Neuron::Neuron(const nntopology_t outputsNumber, const nntopology_t neuronIndex)
     }
 }
 
+Neuron::Neuron(const nntopology_t outputsNumber, const nntopology_t neuronIndex, ActivationFunctionType activationFunctionType, nntopology_t previousLayerSize) {
+    neuronIndex_ = neuronIndex;
+    for (nntopology_t i = 0; i < outputsNumber; i++) {
+        outConnections_.push_back(Connection(activationFunctionType, previousLayerSize));
+    }
+}
+
 nnweight_t Neuron::getOutputValue() const {
     return outputValue_;
 }
