@@ -40,35 +40,35 @@ void NeuralNetwork::classify(const vector<nnweight_t> &inputVals, vector<nnweigh
     getResults(resultVals, true);
 }
 
-nnweight_t NeuralNetwork::train(const vector<vector<nnweight_t>> &inputVals, const vector<vector<nnweight_t>> &targetVals, nnweight_t testRatio, size_t epochs) {
-    size_t delimSize = inputVals.size() * (1 - testRatio);
-    vector<vector<nnweight_t>> trainX(inputVals.begin(), inputVals.begin() + delimSize);
-    vector<vector<nnweight_t>> testX(inputVals.begin() + delimSize, inputVals.end());
-    vector<vector<nnweight_t>> trainY(targetVals.begin(), targetVals.begin() + delimSize);
-    vector<vector<nnweight_t>> testY(targetVals.begin() + delimSize, targetVals.end());
+nnweight_t NeuralNetwork::train(const vector<vector<nnweight_t>> &trainInputVals, const vector<vector<nnweight_t>> &trainTargetVals, const vector<vector<nnweight_t>> &testInputVals, const vector<vector<nnweight_t>> &testTargetVals, nnweight_t testRatio, size_t epochs) {
+    // size_t delimSize = trainInputVals.size() * (1 - testRatio);
+    // vector<vector<nnweight_t>> trainX(trainInputVals.begin(), trainInputVals.begin() + delimSize);
+    // vector<vector<nnweight_t>> testX(trainInputVals.begin() + delimSize, trainInputVals.end());
+    // vector<vector<nnweight_t>> trainY(trainTargetVals.begin(), trainTargetVals.begin() + delimSize);
+    // vector<vector<nnweight_t>> testY(trainTargetVals.begin() + delimSize, trainTargetVals.end());
 
     vector<size_t> indexes;
-    indexes.reserve(trainX.size());
+    indexes.reserve(trainInputVals.size());
     for (size_t e = 0; e < epochs; e++) {
-        shuffleVectorsIndexes(trainX.size(), indexes);
+        shuffleVectorsIndexes(trainInputVals.size(), indexes);
         for (vector<size_t>::iterator it1 = indexes.begin(); it1 != indexes.end(); ++it1) {
-            feedForward(trainX[*it1]);
-            backProp(trainY[*it1]);
+            feedForward(trainInputVals[*it1]);
+            backProp(trainTargetVals[*it1]);
         }
     }
     vector<nnweight_t> resultVals;
     nnweight_t good = 0;
     nnweight_t bad = 0;
-    for (size_t i = 0; i < testX.size(); i++) {
-        classify(testX[i], resultVals);
-        if (EqualResults(resultVals, testY[i])) {
+    for (size_t i = 0; i < testInputVals.size(); i++) {
+        classify(testInputVals[i], resultVals);
+        if (EqualResults(resultVals, testTargetVals[i])) {
             good++;
         } else {
             bad++;
         }
     }
 
-    return good / testX.size();
+    return good / testInputVals.size();
 }
 
 bool NeuralNetwork::EqualResults(const vector<nnweight_t> &reslutVals, const vector<nnweight_t> &y) {
