@@ -17,8 +17,6 @@
 
 // eta 0.0008 alpha 0.45 0.816167 acc topo 784-128-64-10
 // eta 0.002 alpha 0.45 0.818333 acc
-nnweight_t Layer::eta = 0.0009;
-nnweight_t Layer::alpha = 0.425;
 
 Layer::Layer(vector<Neuron> &neurons, ActivationFunctionType activationType) {
     neurons_ = neurons;
@@ -113,9 +111,9 @@ void Layer::calculateHiddenNeuronsGradients(Layer &nextLayer) {
     }
 }
 
-void Layer::updateNeuronsInputWeights(Layer &previousLayer) {
+void Layer::updateNeuronsInputWeights(Layer &previousLayer, nnweight_t eta, nnweight_t alpha) {
     for (size_t i = 0; i < getLayerNeuronsCount() - 1; i++) {
-        updateInputWeights(neurons_[i], previousLayer);
+        updateInputWeights(neurons_[i], previousLayer, eta, alpha);
     }
 }
 
@@ -158,7 +156,7 @@ void Layer::calculateHiddenGradients(Neuron &neuron, Layer &nextLayer) {
     }
 }
 
-void Layer::updateInputWeights(Neuron &neuron, Layer &previousLayer) {
+void Layer::updateInputWeights(Neuron &neuron, Layer &previousLayer, nnweight_t eta, nnweight_t alpha) {
     for (size_t i = 0; i < previousLayer.getLayerNeuronsCount(); i++) {
         Neuron &prevNeuron = previousLayer.getNeuronAt(i);
         nnweight_t oldDeltaWeight = prevNeuron.getDeltaWeightOnConnection(neuron);

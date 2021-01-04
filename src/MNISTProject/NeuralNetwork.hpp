@@ -11,9 +11,9 @@ using namespace std;
 class NeuralNetwork {
 public:
     NeuralNetwork(const NNInfo &nninfo);
-    void trainOnline(const vector<nnweight_t> &inputVals, const vector<nnweight_t> &targetVals, vector<nnweight_t> &resultVals);
+    void trainOnline(const vector<nnweight_t> &inputVals, const vector<nnweight_t> &targetVals, vector<nnweight_t> &resultVals, nnweight_t eta, nnweight_t alpha);
     void classify(const vector<nnweight_t> &inputVals, vector<nnweight_t> &resultVals);
-    nnweight_t train(const vector<vector<nnweight_t>> &trainInputVals, const vector<vector<nnweight_t>> &trainTargetVals, const vector<vector<nnweight_t>> &testInputVals, const vector<vector<nnweight_t>> &testTargetVals, nnweight_t testRatio = 0.1, size_t epochs = 1);
+    nnweight_t train(const vector<vector<nnweight_t>> &trainInputVals, const vector<vector<nnweight_t>> &trainTargetVals, const vector<vector<nnweight_t>> &testInputVals, const vector<vector<nnweight_t>> &testTargetVals, nnweight_t eta, nnweight_t alpha, nnweight_t testRatio = 0.1, size_t epochs = 1);
 
 private:
     vector<Layer> layers_;
@@ -24,7 +24,7 @@ private:
     static nnweight_t recentAverageFactor_;
 
     void feedForward(const vector<nnweight_t> &inputVals);
-    void backProp(const vector<nnweight_t> &targetVals);
+    void backProp(const vector<nnweight_t> &targetVals, nnweight_t eta, nnweight_t alpha);
     void getResults(vector<nnweight_t> &resultVals, bool hotEncoded) const;
     
     void shuffleVectorsIndexes(size_t size, vector<size_t> &indexes);

@@ -14,7 +14,7 @@ class Layer {
         void feedForward(Layer &previousLayer);
         void calculateNeuronOutputGradients(const vector<nnweight_t> &targetVals);
         void calculateHiddenNeuronsGradients(Layer &nextLayer);
-        void updateNeuronsInputWeights(Layer &previousLayer);
+        void updateNeuronsInputWeights(Layer &previousLayer, nnweight_t eta, nnweight_t alpha);
 
         Neuron& getNeuronAt(size_t i);
         void setNeuronOutputValue(nntopology_t index, nnweight_t outputValue);  
@@ -25,12 +25,10 @@ class Layer {
     private:
         vector<Neuron> neurons_;
         ActivationFunctionType activationFunctionType_;
-        static nnweight_t eta;
-        static nnweight_t alpha;
 
         void calculateOutputGradients(Neuron &neuron, const nnweight_t targetVal);
         void calculateHiddenGradients(Neuron &neuron, Layer &nextLayer);
-        void updateInputWeights(Neuron &neuron, Layer &previousLayer);
+        void updateInputWeights(Neuron &neuron, Layer &previousLayer, nnweight_t eta, nnweight_t alpha);
         nnweight_t sumWeightGradient(Neuron &neuron, Layer &nextLayer);
 
         void classicFeedForward(Layer &previousLayer);

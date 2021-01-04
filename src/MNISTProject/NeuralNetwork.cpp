@@ -29,10 +29,10 @@ NeuralNetwork::NeuralNetwork(const NNInfo &nninfo) {
     }
 }
 
-void NeuralNetwork::trainOnline(const vector<nnweight_t> &inputVals, const vector<nnweight_t> &targetVals, vector<nnweight_t> &resultVals) {
+void NeuralNetwork::trainOnline(const vector<nnweight_t> &inputVals, const vector<nnweight_t> &targetVals, vector<nnweight_t> &resultVals, nnweight_t eta, nnweight_t alpha) {
     feedForward(inputVals);
     getResults(resultVals, true);
-    backProp(targetVals);
+    backProp(targetVals, eta, alpha);
 }
 
 void NeuralNetwork::classify(const vector<nnweight_t> &inputVals, vector<nnweight_t> &resultVals) {
@@ -40,7 +40,7 @@ void NeuralNetwork::classify(const vector<nnweight_t> &inputVals, vector<nnweigh
     getResults(resultVals, true);
 }
 
-nnweight_t NeuralNetwork::train(const vector<vector<nnweight_t>> &trainInputVals, const vector<vector<nnweight_t>> &trainTargetVals, const vector<vector<nnweight_t>> &testInputVals, const vector<vector<nnweight_t>> &testTargetVals, nnweight_t testRatio, size_t epochs) {
+nnweight_t NeuralNetwork::train(const vector<vector<nnweight_t>> &trainInputVals, const vector<vector<nnweight_t>> &trainTargetVals, const vector<vector<nnweight_t>> &testInputVals, const vector<vector<nnweight_t>> &testTargetVals, nnweight_t eta, nnweight_t alpha, nnweight_t testRatio, size_t epochs) {
     // size_t delimSize = trainInputVals.size() * (1 - testRatio);
     // vector<vector<nnweight_t>> trainX(trainInputVals.begin(), trainInputVals.begin() + delimSize);
     // vector<vector<nnweight_t>> testX(trainInputVals.begin() + delimSize, trainInputVals.end());
@@ -53,7 +53,7 @@ nnweight_t NeuralNetwork::train(const vector<vector<nnweight_t>> &trainInputVals
         shuffleVectorsIndexes(trainInputVals.size(), indexes);
         for (vector<size_t>::iterator it1 = indexes.begin(); it1 != indexes.end(); ++it1) {
             feedForward(trainInputVals[*it1]);
-            backProp(trainTargetVals[*it1]);
+            backProp(trainTargetVals[*it1], eta, alpha);
         }
     }
     vector<nnweight_t> resultVals;
@@ -110,7 +110,7 @@ void NeuralNetwork::feedForward(const vector<nnweight_t> &inputVals) {
     }
 }
 
-void NeuralNetwork::backProp(const vector<nnweight_t> &targetVals) {
+void NeuralNetwork::backProp(const vector<nnweight_t> &targetVals, nnweight_t eta, nnweight_t alpha) {
     Layer &outputLayer = layers_.back();
     outputLayer.calculateNeuronOutputGradients(targetVals);
 
@@ -124,7 +124,7 @@ void NeuralNetwork::backProp(const vector<nnweight_t> &targetVals) {
         Layer &currentLayer = layers_[i];
         Layer &previousLayer = layers_[i - 1];
 
-        currentLayer.updateNeuronsInputWeights(previousLayer);
+        currentLayer.updateNeuronsInputWeights(previousLayer, eta, alpha);
     }
 }
 
