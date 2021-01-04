@@ -10,7 +10,7 @@ using namespace std;
 class Neuron {
     public:
         Neuron(const nntopology_t outputsNumber, const nntopology_t neuronIndex);
-        Neuron(const nntopology_t outputsNumber, const nntopology_t neuronIndex, ActivationFunctionType activationFunctionType, nntopology_t previousLayerSize); 
+        Neuron(const nntopology_t outputsNumber, const nntopology_t neuronIndex, ActivationFunctionType activationFunctionType, nntopology_t layerFromSize, nntopology_t layerToSize);
         
         nnweight_t getOutputValue() const;
         void setOutputValue(nnweight_t outputValue);
@@ -23,6 +23,7 @@ class Neuron {
         void setWeightOnConnection(const Neuron &connectedNeuron, nnweight_t newWeight);
         
         nnweight_t getDeltaWeightOnConnection(const Neuron &connectedNeuron) const;
+        nnweight_t getDeltaWeightOnConnection(size_t connectionIndex) const;
         void setDeltaWeightOnConnection(const Neuron &connectedNeuron, nnweight_t newDeltaWeight);
         
         static nnweight_t tanhActivationFunction(nnweight_t x);

@@ -7,7 +7,7 @@
 class Connection {
     public:
         Connection();
-        Connection(ActivationFunctionType activationFunctionType, nntopology_t previousLayerSize);
+        Connection(ActivationFunctionType activationFunctionType, nntopology_t layerFromSize, nntopology_t layerToSize);
 
         nnweight_t getWeight() const;
         void setWeight(nnweight_t newWeight);

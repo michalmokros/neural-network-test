@@ -1,13 +1,6 @@
 #include <cmath>
+#include <iostream>
 #include "Neuron.hpp"
-
-nnweight_t Neuron::tanhActivationFunction(nnweight_t x) {
-    return tanh(x);
-}
-
-nnweight_t Neuron::tanhActivationFunctionDerivation(nnweight_t x) {
-    return 1 - x * x;
-}
 
 nnweight_t Neuron::reluActivationFunction(nnweight_t x) {
     return x < 0 ? 0 : x;
@@ -28,10 +21,10 @@ Neuron::Neuron(const nntopology_t outputsNumber, const nntopology_t neuronIndex)
     }
 }
 
-Neuron::Neuron(const nntopology_t outputsNumber, const nntopology_t neuronIndex, ActivationFunctionType activationFunctionType, nntopology_t previousLayerSize) {
+Neuron::Neuron(const nntopology_t outputsNumber, const nntopology_t neuronIndex, ActivationFunctionType activationFunctionType, nntopology_t layerFromSize, nntopology_t layerToSize) {
     neuronIndex_ = neuronIndex;
     for (nntopology_t i = 0; i < outputsNumber; i++) {
-        outConnections_.push_back(Connection(activationFunctionType, previousLayerSize));
+        outConnections_.push_back(Connection(activationFunctionType, layerFromSize, layerToSize));
     }
 }
 
@@ -65,6 +58,10 @@ void Neuron::setWeightOnConnection(const Neuron &connectedNeuron, nnweight_t new
 
 nnweight_t Neuron::getDeltaWeightOnConnection(const Neuron &connectedNeuron) const {
     return outConnections_[connectedNeuron.neuronIndex_].getDeltaWeight();
+}
+
+nnweight_t Neuron::getDeltaWeightOnConnection(size_t connectionIndex) const {
+    return outConnections_[connectionIndex].getDeltaWeight();
 }
 
 void Neuron::setDeltaWeightOnConnection(const Neuron &connectedNeuron, nnweight_t newDeltaWeight) {

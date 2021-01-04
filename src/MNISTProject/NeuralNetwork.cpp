@@ -21,7 +21,7 @@ NeuralNetwork::NeuralNetwork(const NNInfo &nninfo) {
             if (i == layersSize_ - 1) {
                 layerVector.push_back(Neuron(outputsNumber, j));
             } else {
-                layerVector.push_back(Neuron(outputsNumber, j, nninfo.topology[i+1].activationFunction, nninfo.topology[i].layerSize));
+                layerVector.push_back(Neuron(outputsNumber, j, nninfo.topology[i+1].activationFunction, nninfo.topology[i].layerSize, nninfo.topology[i+1].layerSize));
             }
         }
 
@@ -31,7 +31,7 @@ NeuralNetwork::NeuralNetwork(const NNInfo &nninfo) {
 
 void NeuralNetwork::trainOnline(const vector<nnweight_t> &inputVals, const vector<nnweight_t> &targetVals, vector<nnweight_t> &resultVals) {
     feedForward(inputVals);
-    getResults(resultVals, false);
+    getResults(resultVals, true);
     backProp(targetVals);
 }
 
@@ -112,19 +112,6 @@ void NeuralNetwork::feedForward(const vector<nnweight_t> &inputVals) {
 
 void NeuralNetwork::backProp(const vector<nnweight_t> &targetVals) {
     Layer &outputLayer = layers_.back();
-    overallNetError_ = 0.0;
-
-    for (size_t i = 0; i < outputLayer.getLayerNeuronsCount() - 1; i++) {
-        nnweight_t delta = targetVals[i] - outputLayer.getNeuronAt(i).getOutputValue();
-        overallNetError_ += delta * delta;
-    } 
-
-    overallNetError_ /= outputLayer.getLayerNeuronsCount() - 1;
-    overallNetError_ = sqrt(overallNetError_);
-
-    recentAverageError_ = (recentAverageError_ * recentAverageFactor_ + overallNetError_)
-     / (recentAverageFactor_ + 1.0);
-
     outputLayer.calculateNeuronOutputGradients(targetVals);
 
     for (size_t i = layers_.size() - 2; i > 0; i--) {

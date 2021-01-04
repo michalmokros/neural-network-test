@@ -11,13 +11,12 @@ Connection::Connection() {
     weight_ = Connection::GetRandomWeight(0.0, 1.0);
 }
 
-Connection::Connection(ActivationFunctionType activationFunctionType, nntopology_t previousLayerSize) {
-    weight_ = Connection::GetRandomWeight(0.0, 1.0);
-    // if (activationFunctionType == ActivationFunctionType::RELU) {
-    //     weight_ = Connection::GetRandomWeight(0, 1.0) * sqrt(2/previousLayerSize);
-    // } else {
-    //     weight_ = Connection::GetRandomWeight(0, 1.0) * sqrt(1/previousLayerSize);
-    // }
+Connection::Connection(ActivationFunctionType activationFunctionType, nntopology_t layerFromSize, nntopology_t layerToSize) {
+    if (activationFunctionType == ActivationFunctionType::RELU) {
+        weight_ = Connection::GetRandomWeight(-sqrt(2.0/layerFromSize), sqrt(2.0/layerFromSize));
+    } else {
+        weight_ = Connection::GetRandomWeight(-sqrt(2.0/(layerFromSize+layerToSize)), sqrt(2.0/(layerFromSize+layerToSize)));
+    }
 }
 
 nnweight_t Connection::getWeight() const {
@@ -25,7 +24,7 @@ nnweight_t Connection::getWeight() const {
 }
 
 void Connection::setWeight(nnweight_t newWeight) {
-    weight_ += newWeight;
+    weight_ = weight_ + newWeight;
 }
 
 nnweight_t Connection::getDeltaWeight() const {

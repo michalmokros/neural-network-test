@@ -44,7 +44,7 @@ void testxordataset() {
 
 void testmnistdataset() {
     NNInfo nnInfo;
-    nnInfo.topology = vector<Topology>{Topology(784, ActivationFunctionType::INPUT), Topology(128, ActivationFunctionType::RELU), Topology(10, ActivationFunctionType::SOFTMAX)};
+    nnInfo.topology = vector<Topology>{Topology(784, ActivationFunctionType::INPUT), Topology(256, ActivationFunctionType::RELU), Topology(10, ActivationFunctionType::SOFTMAX)};
     NeuralNetwork network(nnInfo);
     CSVDataReader trainData("C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\data\\fashion_mnist_train_vectors.csv", "C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\data\\fashion_mnist_train_labels.csv");
 
@@ -71,7 +71,7 @@ void testmnistdataset() {
 
 void testmnisttrain() {
     NNInfo nnInfo;
-    nnInfo.topology = vector<Topology>{Topology(784, ActivationFunctionType::INPUT), Topology(128, ActivationFunctionType::RELU), Topology(10, ActivationFunctionType::SOFTMAX)};
+    nnInfo.topology = vector<Topology>{Topology(784, ActivationFunctionType::INPUT), Topology(384, ActivationFunctionType::RELU), Topology(10, ActivationFunctionType::SOFTMAX)};
     NeuralNetwork network(nnInfo);
     CSVDataReader trainData("C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\data\\fashion_mnist_train_vectors.csv", "C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\data\\fashion_mnist_train_labels.csv");
 
@@ -83,7 +83,7 @@ void testmnisttrain() {
     
     trainData.getAllTargetOutputs(targetVals, 10);
     
-    nnweight_t acc = network.train(inputVals, targetVals, 0.2, 5);
+    nnweight_t acc = network.train(inputVals, targetVals, 0.1, 2);
 
     cout << "Accuracy = " << acc << endl;
 
