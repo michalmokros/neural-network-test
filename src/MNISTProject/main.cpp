@@ -46,9 +46,9 @@ void testxordataset() {
 
 void testmnistdataset() {
     NNInfo nnInfo;
-    nnInfo.topology = vector<Topology>{Topology(784, ActivationFunctionType::INPUT), Topology(256, ActivationFunctionType::RELU), Topology(10, ActivationFunctionType::SOFTMAX)};
+    nnInfo.topology = vector<Topology>{Topology(784, ActivationFunctionType::INPUT), Topology(128, ActivationFunctionType::RELU), Topology(10, ActivationFunctionType::SOFTMAX)};
     NeuralNetwork network(nnInfo);
-    CSVDataReader trainData("C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\data\\fashion_mnist_train_vectors.csv", "C:\\Users\\Martin\\GitProjects\\School\\PV021\\pv021-neural-network\\data\\fashion_mnist_train_labels.csv");
+    CSVDataReader trainData("../../data/fashion_mnist_train_vectors.csv", "../../data/fashion_mnist_train_labels.csv");
 
     vector<double> inputVals, targetVals, resultVals;
     int trainingPass = 0;
@@ -75,7 +75,7 @@ void testmnistdataset() {
 
 void testmnisttrain() {
     NNInfo nnInfo;
-    nnInfo.topology = vector<Topology>{Topology(784, ActivationFunctionType::INPUT), Topology(128, ActivationFunctionType::RELU), Topology(10, ActivationFunctionType::SOFTMAX)};
+    nnInfo.topology = vector<Topology>{Topology(784, ActivationFunctionType::INPUT), Topology(200, ActivationFunctionType::RELU), Topology(100, ActivationFunctionType::RELU), Topology(10, ActivationFunctionType::SOFTMAX)};
     NeuralNetwork network(nnInfo);
     CSVDataReader trainData("../../data/fashion_mnist_train_vectors.csv", "../../data/fashion_mnist_train_labels.csv");
     CSVDataReader testData("../../data/fashion_mnist_test_vectors.csv", "../../data/fashion_mnist_test_labels.csv");
@@ -90,9 +90,9 @@ void testmnisttrain() {
     trainData.getAllTargetOutputs(trainTargetVals, 10);
     testData.getAllTargetOutputs(testTargetVals, 10);
     
-    nnweight_t eta = 0.0009;
-    nnweight_t alpha = 0.425;
-    nnweight_t acc = network.train(trainInputVals, trainTargetVals, testInputVals, testTargetVals, eta, alpha, 0.1, 3);
+    nnweight_t eta = 0.00075;
+    nnweight_t alpha = 0.435;
+    nnweight_t acc = network.train(trainInputVals, trainTargetVals, testInputVals, testTargetVals, eta, alpha, 0.1, 5);
 
     cout << "Accuracy = " << acc << endl;
 
@@ -102,6 +102,6 @@ void testmnisttrain() {
 
 int main() {
     // testxordataset();
-    // testmnistdataset();
-    testmnisttrain();
+    testmnistdataset();
+    // testmnisttrain();
 }

@@ -14,10 +14,14 @@ class Connection {
 
         nnweight_t getDeltaWeight() const;
         void setDeltaWeight(nnweight_t newDeltaWeight);
+
+        nnweight_t getR() const;
+        void setR(nnweight_t r);
    
     private:
         nnweight_t weight_;
         nnweight_t deltaWeight_;
+        nnweight_t r_;
 
         static nnweight_t GetRandomWeight(const nnweight_t min, const nnweight_t max);
 };

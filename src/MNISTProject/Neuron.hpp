@@ -26,6 +26,9 @@ class Neuron {
         nnweight_t getDeltaWeightOnConnection(size_t connectionIndex) const;
         void setDeltaWeightOnConnection(const Neuron &connectedNeuron, nnweight_t newDeltaWeight);
         
+        nnweight_t getROnConnection(Neuron& connectedNeuron) const;
+        void setROnConnection(Neuron& connectedNeuron, nnweight_t coefficient);
+        
         static nnweight_t tanhActivationFunction(nnweight_t x);
         static nnweight_t tanhActivationFunctionDerivation(nnweight_t x);
         static nnweight_t reluActivationFunction(nnweight_t x);

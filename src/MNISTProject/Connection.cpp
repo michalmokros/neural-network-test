@@ -34,3 +34,12 @@ nnweight_t Connection::getDeltaWeight() const {
 void Connection::setDeltaWeight(nnweight_t newDeltaWeight) {
     deltaWeight_ = newDeltaWeight;
 }
+
+
+nnweight_t Connection::getR() const {
+    return r_;
+}
+
+void Connection::setR(nnweight_t r) {
+    r_ += r;
+}

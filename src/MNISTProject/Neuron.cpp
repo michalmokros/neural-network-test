@@ -67,3 +67,11 @@ nnweight_t Neuron::getDeltaWeightOnConnection(size_t connectionIndex) const {
 void Neuron::setDeltaWeightOnConnection(const Neuron &connectedNeuron, nnweight_t newDeltaWeight) {
     outConnections_[connectedNeuron.neuronIndex_].setDeltaWeight(newDeltaWeight);
 }
+
+void Neuron::setROnConnection(Neuron& connectedNeuron, nnweight_t coefficient) {
+    outConnections_[connectedNeuron.neuronIndex_].setR(coefficient);
+}
+
+nnweight_t Neuron::getROnConnection(Neuron& connectedNeuron) const {
+    return outConnections_[connectedNeuron.neuronIndex_].getR();
+}

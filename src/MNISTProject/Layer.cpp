@@ -159,11 +159,16 @@ void Layer::calculateHiddenGradients(Neuron &neuron, Layer &nextLayer) {
 void Layer::updateInputWeights(Neuron &neuron, Layer &previousLayer, nnweight_t eta, nnweight_t alpha) {
     for (size_t i = 0; i < previousLayer.getLayerNeuronsCount(); i++) {
         Neuron &prevNeuron = previousLayer.getNeuronAt(i);
+        calculateNewConnectionR(prevNeuron, neuron, prevNeuron.getOutputValue(), neuron.getGradient());
         nnweight_t oldDeltaWeight = prevNeuron.getDeltaWeightOnConnection(neuron);
-        nnweight_t newDeltaWeight = eta * prevNeuron.getOutputValue() * neuron.getGradient() + alpha * oldDeltaWeight;
+        nnweight_t newDeltaWeight = (eta/sqrt(prevNeuron.getROnConnection(neuron)+0.00000001)) * prevNeuron.getOutputValue() * neuron.getGradient() + alpha * oldDeltaWeight;
         prevNeuron.setDeltaWeightOnConnection(neuron, newDeltaWeight);
         prevNeuron.setWeightOnConnection(neuron, newDeltaWeight);
     }
+}
+
+void Layer::calculateNewConnectionR(Neuron &prevNeuron, Neuron &currNeuron, nnweight_t outputValue, nnweight_t gradient) {
+    return prevNeuron.setROnConnection(currNeuron, (outputValue * gradient * outputValue * gradient));
 }
 
 nnweight_t Layer::sumWeightGradient(Neuron &neuron, Layer &nextLayer) {

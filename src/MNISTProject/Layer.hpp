@@ -33,6 +33,7 @@ class Layer {
 
         void classicFeedForward(Layer &previousLayer);
         void softmaxFeedForward(Layer &previousLayer);
+        void calculateNewConnectionR(Neuron &prevNeuron, Neuron &currNeuron, nnweight_t outputValue, nnweight_t gradient);
 
         static nnweight_t scaler(nnweight_t val, nnweight_t rangeMin, nnweight_t rangeMax, nnweight_t desiredMin, nnweight_t desiredMax);
 };
