@@ -48,8 +48,8 @@ void testmnisttrain() {
     NNInfo nnInfo;
     nnInfo.topology = vector<Topology>{Topology(784, ActivationFunctionType::INPUT), Topology(128, ActivationFunctionType::RELU), Topology(10, ActivationFunctionType::SOFTMAX)};
     NeuralNetwork network(nnInfo);
-    CSVDataReader trainData("../data/fashion_mnist_train_vectors.csv", "../data/fashion_mnist_train_labels.csv");
-    CSVDataReader testData("../data/fashion_mnist_test_vectors.csv");
+    CSVDataReader trainData("C:\\Users\\Martin\\GitProjects\\School\\pv021-neural-network\\data\\fashion_mnist_train_vectors.csv", "C:\\Users\\Martin\\GitProjects\\School\\pv021-neural-network\\data\\fashion_mnist_train_labels.csv");
+    CSVDataReader testData("C:\\Users\\Martin\\GitProjects\\School\\pv021-neural-network\\data\\fashion_mnist_test_vectors.csv");
 
     vector<vector<nnweight_t>> trainInputVals, trainTargetVals, testInputVals;
     chrono::steady_clock::time_point begin = chrono::steady_clock::now();

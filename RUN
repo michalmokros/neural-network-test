@@ -3,7 +3,7 @@
 
 echo "Adding some modules"
 
-# module add the_module_you_need_but_dont_deserve
+modules add gcc
 
 echo "#################"
 echo "    COMPILING    "

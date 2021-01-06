@@ -52,20 +52,70 @@ bool CSVDataReader::getTargetOutputs(vector<nnweight_t> &targetOutputVals, nntop
 }
 
 void CSVDataReader::getAllInputs(vector<vector<nnweight_t>> &inputVals, nnweight_t rangeMin, nnweight_t rangeMax, nnweight_t desiredMin, nnweight_t desiredMax) {
-    while (!trainingDataFile_.eof()) {
-        vector<nnweight_t> iv;
-        if (getNextInputs(iv, rangeMin, rangeMax, desiredMin, desiredMax)) {
-            inputVals.push_back(iv);
+    int l = 0;
+ 
+    while (trainingDataFile_) {
+        l++;
+        string s;
+        if (!getline(trainingDataFile_, s)) break;
+        if (s[0] != '#') {
+            istringstream ss(s);
+            vector<double> record;
+ 
+            while (ss) {
+                string line;
+                if (!getline(ss, line, ','))
+                    break;
+                try {
+                    record.push_back(stof(line));
+                }
+                catch (const std::invalid_argument e) {
+                    cout << "NaN found in file " << endl;
+                    e.what();
+                }
+            }
+ 
+            scaler(record, rangeMin, rangeMax, desiredMin, desiredMax);
+            inputVals.push_back(record);    
         }
+    }
+ 
+    if (!trainingDataFile_.eof()) {
+        cerr << "Could not read file " << endl;
     }
 }
 
 void CSVDataReader::getAllTargetOutputs(vector<vector<nnweight_t>> &targetOutputVals, nntopology_t size) {
-    while (!labelsDataFile_.eof()) {
-        vector<nnweight_t> tv;
-        if (getTargetOutputs(tv, size)) {
-           targetOutputVals.push_back(tv);
+    int l = 0;
+ 
+    while (labelsDataFile_) {
+        l++;
+        string s;
+        if (!getline(labelsDataFile_, s)) break;
+        if (s[0] != '#') {
+            istringstream ss(s);
+            vector<double> record;
+ 
+            while (ss) {
+                string line;
+                if (!getline(ss, line, ','))
+                    break;
+                try {
+                    record.push_back(stof(line));
+                }
+                catch (const std::invalid_argument e) {
+                    cout << "NaN found in file " << endl;
+                    e.what();
+                }
+            }
+ 
+            record = one_hot_encoder(record.back(), size);
+            targetOutputVals.push_back(record);    
         }
+    }
+ 
+    if (!trainingDataFile_.eof()) {
+        cerr << "Could not read file " << endl;
     }
 }
 
