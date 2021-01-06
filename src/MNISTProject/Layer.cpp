@@ -111,9 +111,9 @@ void Layer::calculateHiddenNeuronsGradients(Layer &nextLayer) {
     }
 }
 
-void Layer::updateNeuronsInputWeights(Layer &previousLayer, nnweight_t eta, nnweight_t alpha) {
+void Layer::updateNeuronsInputWeights(Layer &previousLayer, nnweight_t eta, nnweight_t alpha, nnweight_t overallNetError) {
     for (size_t i = 0; i < getLayerNeuronsCount() - 1; i++) {
-        updateInputWeights(neurons_[i], previousLayer, eta, alpha);
+        updateInputWeights(neurons_[i], previousLayer, eta, alpha, overallNetError);
     }
 }
 
@@ -156,12 +156,12 @@ void Layer::calculateHiddenGradients(Neuron &neuron, Layer &nextLayer) {
     }
 }
 
-void Layer::updateInputWeights(Neuron &neuron, Layer &previousLayer, nnweight_t eta, nnweight_t alpha) {
+void Layer::updateInputWeights(Neuron &neuron, Layer &previousLayer, nnweight_t eta, nnweight_t alpha, nnweight_t overallNetError) {
     for (size_t i = 0; i < previousLayer.getLayerNeuronsCount(); i++) {
         Neuron &prevNeuron = previousLayer.getNeuronAt(i);
         calculateNewConnectionR(prevNeuron, neuron, prevNeuron.getOutputValue(), neuron.getGradient());
         nnweight_t oldDeltaWeight = prevNeuron.getDeltaWeightOnConnection(neuron);
-        nnweight_t newDeltaWeight = (eta/sqrt(prevNeuron.getROnConnection(neuron)+0.00000001)) * prevNeuron.getOutputValue() * neuron.getGradient() + alpha * oldDeltaWeight;
+        nnweight_t newDeltaWeight = (eta/sqrt(prevNeuron.getROnConnection(neuron)+0.00000001)) * prevNeuron.getOutputValue() * neuron.getGradient() + (1.0 - overallNetError) * oldDeltaWeight;
         prevNeuron.setDeltaWeightOnConnection(neuron, newDeltaWeight);
         prevNeuron.setWeightOnConnection(neuron, newDeltaWeight);
     }

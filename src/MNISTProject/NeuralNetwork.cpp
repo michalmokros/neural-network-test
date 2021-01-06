@@ -112,6 +112,19 @@ void NeuralNetwork::feedForward(const vector<nnweight_t> &inputVals) {
 
 void NeuralNetwork::backProp(const vector<nnweight_t> &targetVals, nnweight_t eta, nnweight_t alpha) {
     Layer &outputLayer = layers_.back();
+    overallNetError_ = 0.0;
+
+    for (size_t i = 0; i < outputLayer.getLayerNeuronsCount() - 1; i++) {
+        nnweight_t delta = targetVals[i] - outputLayer.getNeuronAt(i).getOutputValue();
+        overallNetError_ += delta * delta;
+    } 
+
+    overallNetError_ /= outputLayer.getLayerNeuronsCount() - 1;
+    overallNetError_ = sqrt(overallNetError_);
+
+    recentAverageError_ = (recentAverageError_ * recentAverageFactor_ + overallNetError_)
+    / (recentAverageFactor_ + 1.0);
+
     outputLayer.calculateNeuronOutputGradients(targetVals);
 
     for (size_t i = layers_.size() - 2; i > 0; i--) {
@@ -124,7 +137,7 @@ void NeuralNetwork::backProp(const vector<nnweight_t> &targetVals, nnweight_t et
         Layer &currentLayer = layers_[i];
         Layer &previousLayer = layers_[i - 1];
 
-        currentLayer.updateNeuronsInputWeights(previousLayer, eta, alpha);
+        currentLayer.updateNeuronsInputWeights(previousLayer, eta, alpha, overallNetError_);
     }
 }
 
