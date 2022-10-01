@@ -1,10 +1,8 @@
-# deep learning from scratch
+# Deep Learning from Scratch
 **This file may not be up-to-date; read forum, emails, etc.**
 
 ## Task:
-Implement a feed-forward neural network in C/C++ (or Rust/Swift with limited language support) and train it on a given dataset using a backpropagation algorithm. The dataset is Fashion MNIST [0],  a modern version of a well-known MNIST [1]. Fashion-MNIST is a dataset of Zalando's article images ‒ consisting of a training set of 60,000 examples and a test set of 10,000 examples. Each example is a 28x28 grayscale image, associated with a label from 10 classes. The dataset in CSV format will be uploaded in IS in study materials. There are four data files — two data files as input vectors and two data files with a list of expected predictions.
-The deadline is set for January 6th, 2021.
-Some rules about implementations:
+Implement a feed-forward neural network in C/C++ (or Rust/Swift with limited language support) and train it on a given dataset using a backpropagation algorithm. The dataset is Fashion MNIST [0],  a modern version of a well-known MNIST [1]. Fashion-MNIST is a dataset of Zalando's article images ‒ consisting of a training set of 60,000 examples and a test set of 10,000 examples. Each example is a 28x28 grayscale image, associated with a label from 10 classes. The dataset is in CSV format.
 
 ---
 
